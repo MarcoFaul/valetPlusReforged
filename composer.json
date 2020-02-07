@@ -30,5 +30,6 @@
     },
     "bin": [
         "valet"
-    ]
+    ],
+    "minimum-stability": "stable"
 }
