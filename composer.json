@@ -1,26 +1,7 @@
 {
-    "name": "weprovide/valet-plus",
-    "app": "Valet+",
+    "name": "marcofaul/valetPlusReforged",
     "description": "Blazing fast macOS PHP development environment",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Taylor Otwell",
-            "email": "taylor@laravel.com"
-        },
-        {
-            "name": "Adam Wathan",
-            "email": "adam.wathan@gmail.com"
-        },
-        {
-            "name": "Tim Neutkens",
-            "email": "tim@weprovide.com"
-        },
-        {
-            "name": "Johann Zelger",
-            "email": "j.zelger@techdivision.com"
-        }
-    ],
     "autoload": {
         "files": [
             "cli/includes/compatibility.php",
