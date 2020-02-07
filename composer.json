@@ -1,5 +1,5 @@
 {
-    "name": "marcofaul/valetPlusReforged",
+    "name": "marcofaul/valet-plus-reforged",
     "description": "Blazing fast macOS PHP development environment",
     "license": "MIT",
     "autoload": {
