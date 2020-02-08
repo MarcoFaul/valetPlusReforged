@@ -45,24 +45,34 @@ $app->command('install [--with-mariadb]', function ($withMariadb) {
     PhpFpm::stop();
     Mysql::stop();
     RedisTool::stop();
+
+    Script::portCheck();
+
     DevTools::install();
     Binaries::installBinaries();
-
     Configuration::install();
+    Elasticsearch::install();
+
     $domain = Nginx::install();
     PhpFpm::install();
     DnsMasq::install();
     Mysql::install($withMariadb ? 'mariadb' : 'mysql@5.7');
     RedisTool::install();
     Mailhog::install();
-    Nginx::restart();
+    $nginx = Nginx::restart();
+    if(strpos($nginx, 'test failed') !== false) {
+        warning(PHP_EOL. $nginx);
+        return;
+    }
+
     Valet::symlinkToUsersBin();
     Mysql::setRootPassword();
 
     Mailhog::updateDomain($domain);
     Elasticsearch::updateDomain($domain);
 
-    output(PHP_EOL.'<info>Valet installed successfully!</info>');
+    info(PHP_EOL.'Valet installed successfully!');
+    Script::post($domain);
 })->descriptions('Install the Valet services');
 
 /**
@@ -75,6 +85,8 @@ $app->command('fix [--reinstall]', function ($reinstall) {
 
     PhpFpm::fix($reinstall);
     Pecl::fix();
+    Nginx::restart();
+
 })->descriptions('Fixes common installation problems that prevent Valet+ from working');
 
 /**

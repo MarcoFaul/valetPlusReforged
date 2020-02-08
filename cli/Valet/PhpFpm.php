@@ -485,6 +485,8 @@ class PhpFpm
             output($this->cli->runAsUser('brew uninstall php72'));
             info('Trying to remove php73...');
             output($this->cli->runAsUser('brew uninstall php73'));
+            info('Trying to remove php74...');
+            output($this->cli->runAsUser('brew uninstall php74'));
         }
 
         // If the current php is not 7.2, link 7.2.

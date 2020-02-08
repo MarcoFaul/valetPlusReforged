@@ -141,13 +141,15 @@ class Nginx
     /**
      * Restart the service.
      *
-     * @return void
+     * @return string
      */
     public function restart()
     {
         $this->lint();
 
         $this->brew->restartService($this->brew->nginxServiceName());
+
+        return $this->cli->run('sudo ' . $this->brew->nginxServiceName() . ' -t');
     }
 
     /**
