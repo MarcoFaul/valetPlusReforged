@@ -14,12 +14,17 @@ class Mysql
     const MYSQL_DIR = '/usr/local/var/mysql';
     const MYSQL_ROOT_PASSWORD = 'root';
 
+    const MYSQL_FORMULA_NAME = 'mysql@';
+    const MYSQL_57_VERSION = '5.7';
+    const MYSQL_57_FORMULA = self::MYSQL_FORMULA_NAME . self::MYSQL_57_VERSION;
+    const MYSQL_DEFAULT_FORMULA = self::MYSQL_57_FORMULA;
+
     public $brew;
     public $cli;
     public $files;
     public $configuration;
     public $site;
-    public $systemDatabase = ['sys', 'performance_schema', 'information_schema', 'mysql@5.7'];
+    public $systemDatabase = ['sys', 'performance_schema', 'information_schema', self::MYSQL_DEFAULT_FORMULA];
     /**
      * @var Mysqli
      */
@@ -185,6 +190,13 @@ class Mysql
      */
     public function setRootPassword($oldPwd = '', $newPwd = self::MYSQL_ROOT_PASSWORD)
     {
+        $alreadyRootPW = $this->cli->runAsUser('mysql -u root -proot -e"quit"');
+
+        if(strpos($alreadyRootPW, 'mysql: [Warning] Using a password on the command line interface can be insecure.') !== false) {
+            info('[mysql] Password of root user is already set to root');
+            return;
+        }
+
         $success = true;
         $this->cli->runAsUser("mysqladmin -u root --password='".$oldPwd."' password ".$newPwd, function () use (&$success) {
             warning('Setting password for root user failed. ');

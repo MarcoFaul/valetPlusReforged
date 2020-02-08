@@ -175,14 +175,18 @@ class PhpFpm
             $this->brew->ensureInstalled(self::SUPPORTED_PHP_FORMULAE[$version]);
         }
 
-        info("[php@$currentVersion] Unlinking");
-        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[$currentVersion]));
+        // Unlink the current PHP version.
+        if (!$this->unlinkPhp($currentVersion)) {
+            return;
+        }
 
+        // Relink libjpeg
         info('[libjpeg] Relinking');
         $this->cli->passthru('sudo ln -fs /usr/local/Cellar/jpeg/8d/lib/libjpeg.8.dylib /usr/local/opt/jpeg/lib/libjpeg.8.dylib');
 
-        info("[php@$version] Linking");
-        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[$version] . ' --force --overwrite'));
+        if (!$this->linkPHP($version, $currentVersion)) {
+            return;
+        }
 
         $this->stop();
         $this->install();
@@ -498,5 +502,67 @@ class PhpFpm
         warning("Please check your linked php version, you might need to restart your terminal!" .
             "\nLinked PHP should be php 7.2:");
         output($this->cli->runAsUser('php -v'));
+    }
+
+    /**
+     * Link a PHP version to be used as binary.
+     *
+     * @param $version
+     * @param null $currentVersion
+     *
+     * @return bool
+     */
+    private function linkPhp($version, $currentVersion = null)
+    {
+        $isLinked = true;
+        info("[php@$version] Linking");
+        $output = $this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[$version] . ' --force --overwrite', function () use (&$isLinked) {
+            $isLinked = false;
+        });
+
+        // The output is about how many symlinks were created.
+        // Sanitize the second half to prevent users from being confused.
+        // So the only output would be:
+        // Linking /usr/local/Cellar/valet-php@7.3/7.3.8... 25 symlinks created
+        // Without the directions to create exports pointing towards the binaries.
+        if (strpos($output, 'symlinks created')) {
+            $output = substr($output, 0, strpos($output, 'symlinks created') + 8);
+        }
+        output($output);
+
+        if ($isLinked === false) {
+            warning("Could not link PHP version!" . PHP_EOL .
+                "There appears to be an issue with your PHP $version installation!" . PHP_EOL .
+                "See the output above for more information." . PHP_EOL);
+        }
+
+        if ($currentVersion !== null && $isLinked === false) {
+            info("Linking back to previous version to prevent broken installation!");
+            $this->linkPhp($currentVersion);
+        }
+
+        return $isLinked;
+    }
+
+    /**
+     * Unlink a PHP version, removing the binary symlink.
+     *
+     * @param $version
+     * @return bool
+     */
+    private function unlinkPhp($version)
+    {
+        $isUnlinked = true;
+        info("[php@$version] Unlinking");
+        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[$version], function () use (&$isUnlinked) {
+            $isUnlinked = false;
+        }));
+        if ($isUnlinked === false) {
+            warning("Could not unlink PHP version!" . PHP_EOL .
+                "There appears to be an issue with your PHP $version installation!" . PHP_EOL .
+                "See the output above for more information.");
+        }
+
+        return $isUnlinked;
     }
 }

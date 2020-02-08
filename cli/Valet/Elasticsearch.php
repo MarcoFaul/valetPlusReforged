@@ -65,6 +65,19 @@ class Elasticsearch
      */
     public function install($version = self::ES_DEFAULT_VERSION)
     {
+        if (!$this->files->exists(self::NGINX_CONFIGURATION_PATH)) {
+            $domain = $this->configuration->read()['domain'];
+
+            $this->files->putAsUser(
+                self::NGINX_CONFIGURATION_PATH,
+                str_replace(
+                    ['VALET_DOMAIN'],
+                    [$domain],
+                    $this->files->get(self::NGINX_CONFIGURATION_STUB)
+                )
+            );
+        }
+
         if (!array_key_exists($version, self::SUPPORTED_ES_FORMULAE)) {
             warning('The Elasticsearch version you\'re installing is not supported.');
 

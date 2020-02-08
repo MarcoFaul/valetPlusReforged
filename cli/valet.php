@@ -22,9 +22,9 @@ use Symfony\Component\Console\Question\Question;
 Container::setInstance(new Container);
 
 // get current version based on git describe and tags
-$version = new Version('1.0.29', __DIR__ . '/../');
+$version = new Version('1.1.0', __DIR__ . '/../');
 
-$app = new Application('Valet+', $version->getVersion());
+$app = new Application('Valet+ Reforged', $version->getVersion());
 
 /**
  * Prune missing directories and symbolic links on every command.
