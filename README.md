@@ -10,6 +10,7 @@ Here are a few key differences compared to Valet+:
 - Add Elasticsearch 6.8 support
 - Add Php switching error messages 
 - Add Codesniffer
+- Add "on successful install open browser"
 - Add Port scan
 - Update Xdebug version update (2.2.7 -> 2.9.0)
 - Fix APCU_BC extension sometimes gotten installed twice
@@ -19,7 +20,7 @@ Here are a few key differences compared to Valet+:
 
 #### Coming soon…
 - ioncube for PHP 7.4 (https://forum.ioncube.com/viewtopic.php?t=4542&postdays=0&postorder=asc&start=15)
-
+- MYSQL 8 support
 
 ## Installation
 
