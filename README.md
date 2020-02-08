@@ -8,15 +8,15 @@ Here are a few key differences compared to Valet+:
 - Add PHP 7.3, 7.4 support
 - Add Ioncube for PHP 7.3 
 - Add Elasticsearch 6.8 support
-- Add Php switching error messages 
+- Add PHP switching error messages 
 - Add Codesniffer
-- Add "on successful install open browser"
-- Add Port scan
+- Add "on successful installation, open browser with valet domain"
+- Add port scan
 - Update Xdebug version update (2.2.7 -> 2.9.0)
 - Fix APCU_BC extension sometimes gotten installed twice
 - Fix MySQL Linking
 - Fix Memcache because of missing zlib
-- Fix missing elasticsearch config
+- Fix missing Elasticsearch config
 
 #### Coming soon…
 - ioncube for PHP 7.4 (https://forum.ioncube.com/viewtopic.php?t=4542&postdays=0&postorder=asc&start=15)
@@ -25,6 +25,9 @@ Here are a few key differences compared to Valet+:
 ## Installation
 
 > :warning: Valet+ requires macOS and [Homebrew](https://brew.sh/). Before installation, you should make sure that no other programs such as Apache or Nginx are binding to your local machine's port 80.
+
+If you have valet or valet+ installed. It is recommended to remove it first  
+composer remove weprovide/valet-plus && rm -rf ~/.valet && rm -rf /usr/local/bin/valet
 
 1. Install or update [Homebrew](https://brew.sh/) to the latest version using `brew update`.
 3. Add the Homebrew PHP tap for Valet+ via `brew tap henkrehorst/php`.
