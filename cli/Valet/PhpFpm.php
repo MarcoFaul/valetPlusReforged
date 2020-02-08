@@ -25,22 +25,29 @@ class PhpFpm
 
     const EOL_PHP_VERSIONS = [
         self::PHP_V56_VERSION,
-        self::PHP_V70_VERSION
+        self::PHP_V70_VERSION,
+        self::PHP_V71_VERSION
     ];
 
     const LOCAL_PHP_FOLDER = '/usr/local/etc/valet-php/';
+
+    public $brew;
+    public $cli;
+    public $files;
+    public $pecl;
+    public $peclCustom;
+
     const DEPRECATED_PHP_TAP = 'homebrew/php';
     const VALET_PHP_BREW_TAP = 'henkrehorst/php';
-    var $brew, $cli, $files, $pecl, $peclCustom;
 
     /**
      * Create a new PHP FPM class instance.
      *
-     * @param Brew $brew
-     * @param CommandLine $cli
-     * @param Filesystem $files
+     * @param  Brew $brew
+     * @param  CommandLine $cli
+     * @param  Filesystem $files
      */
-    function __construct(Brew $brew, CommandLine $cli, Filesystem $files, Pecl $pecl, PeclCustom $peclCustom)
+    public function __construct(Brew $brew, CommandLine $cli, Filesystem $files, Pecl $pecl, PeclCustom $peclCustom)
     {
         $this->cli = $cli;
         $this->brew = $brew;
@@ -54,10 +61,10 @@ class PhpFpm
      *
      * @return void
      */
-    function install()
+    public function install()
     {
         if (!$this->hasInstalledPhp()) {
-            $this->brew->ensureInstalled($this->getFormulaName(self::PHP_V74_VERSION));
+            $this->brew->ensureInstalled($this->getFormulaName(self::PHP_V71_VERSION));
         }
 
         if (!$this->brew->hasTap(self::VALET_PHP_BREW_TAP)) {
@@ -77,7 +84,7 @@ class PhpFpm
         $this->restart();
     }
 
-    function iniPath()
+    public function iniPath()
     {
         $destFile = dirname($this->fpmConfigPath());
         $destFile = str_replace('/php-fpm.d', '', $destFile);
@@ -91,7 +98,7 @@ class PhpFpm
      *
      * @return void
      */
-    function restart()
+    public function restart()
     {
         $this->brew->restartService(self::SUPPORTED_PHP_FORMULAE[$this->linkedPhp()]);
     }
@@ -101,7 +108,7 @@ class PhpFpm
      *
      * @return void
      */
-    function stop()
+    public function stop()
     {
         $this->brew->stopService(self::SUPPORTED_PHP_FORMULAE);
     }
@@ -111,7 +118,7 @@ class PhpFpm
      *
      * @return string
      */
-    function fpmConfigPath()
+    public function fpmConfigPath()
     {
         $confLookup = [
             self::PHP_V74_VERSION => self::LOCAL_PHP_FOLDER . '7.4/php-fpm.d/www.conf',
@@ -129,10 +136,9 @@ class PhpFpm
      * Get the formula name for a PHP version.
      *
      * @param $version
-     *
      * @return string Formula name
      */
-    function getFormulaName($version)
+    public function getFormulaName($version)
     {
         return self::SUPPORTED_PHP_FORMULAE[$version];
     }
@@ -142,19 +148,20 @@ class PhpFpm
      *
      * @param $version
      */
-    function switchTo($version)
+    public function switchTo($version)
     {
         $currentVersion = $this->linkedPhp();
 
         if (!array_key_exists($version, self::SUPPORTED_PHP_FORMULAE)) {
-            throw new DomainException("This version of PHP not available. The following versions are available: " . implode(' ',
-                    array_keys(self::SUPPORTED_PHP_FORMULAE)));
+            throw new DomainException("This version of PHP not available. The following versions are available: " . implode(
+                ' ',
+                array_keys(self::SUPPORTED_PHP_FORMULAE)
+            ));
         }
 
         // If the current version equals that of the current PHP version, do not switch.
         if ($version === $currentVersion) {
             info('Already on this version');
-
             return;
         }
 
@@ -176,7 +183,6 @@ class PhpFpm
 
         info("[php@$version] Linking");
         output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[$version] . ' --force --overwrite'));
-        output('Do not forget to reload the shell afterwards (eg.: source ~/.zshrc');
 
         $this->stop();
         $this->install();
@@ -187,10 +193,9 @@ class PhpFpm
      * @deprecated Deprecated in favor of Pecl#installExtension();
      *
      * @param $extension
-     *
      * @return bool
      */
-    function enableExtension($extension)
+    public function enableExtension($extension)
     {
         $currentPhpVersion = $this->linkedPhp();
 
@@ -202,17 +207,17 @@ class PhpFpm
 
         if ($this->files->exists($iniPath . 'ext-' . $extension . '.ini')) {
             info($extension . ' was already enabled.');
-
             return false;
         }
 
         if ($this->files->exists($iniPath . 'ext-' . $extension . '.ini.disabled')) {
-            $this->files->move($iniPath . 'ext-' . $extension . '.ini.disabled',
-                $iniPath . 'ext-' . $extension . '.ini');
+            $this->files->move(
+                $iniPath . 'ext-' . $extension . '.ini.disabled',
+                $iniPath . 'ext-' . $extension . '.ini'
+            );
         }
 
         info('Enabled ' . $extension);
-
         return true;
     }
 
@@ -220,25 +225,24 @@ class PhpFpm
      * @deprecated Deprecated in favor of Pecl#uninstallExtesnion();
      *
      * @param $extension
-     *
      * @return bool
      */
-    function disableExtension($extension)
+    public function disableExtension($extension)
     {
         $iniPath = $this->iniPath();
         if ($this->files->exists($iniPath . 'ext-' . $extension . '.ini.disabled')) {
             info($extension . ' was already disabled.');
-
             return false;
         }
 
         if ($this->files->exists($iniPath . 'ext-' . $extension . '.ini')) {
-            $this->files->move($iniPath . 'ext-' . $extension . '.ini',
-                $iniPath . 'ext-' . $extension . '.ini.disabled');
+            $this->files->move(
+                $iniPath . 'ext-' . $extension . '.ini',
+                $iniPath . 'ext-' . $extension . '.ini.disabled'
+            );
         }
 
         info('Disabled ' . $extension);
-
         return true;
     }
 
@@ -246,10 +250,9 @@ class PhpFpm
      * @deprecated Deprecated in favor of Pecl#installed();
      *
      * @param $extension
-     *
      * @return bool
      */
-    function isExtensionEnabled($extension)
+    public function isExtensionEnabled($extension)
     {
 
         $currentPhpVersion = $this->brew->linkedPhp();
@@ -269,31 +272,27 @@ class PhpFpm
         return true;
     }
 
-    function enableAutoStart()
+    public function enableAutoStart()
     {
         $iniPath = $this->iniPath();
         if ($this->files->exists($iniPath . 'z-performance.ini')) {
             $this->cli->passthru('sed -i "" "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/g" ' . $iniPath . 'z-performance.ini');
             info('xdebug.remote_autostart is now enabled.');
-
             return true;
         }
         warning('Cannot find z-performance.ini, please re-install Valet+');
-
         return false;
     }
 
-    function disableAutoStart()
+    public function disableAutoStart()
     {
         $iniPath = $this->iniPath();
         if ($this->files->exists($iniPath . 'z-performance.ini')) {
             $this->cli->passthru('sed -i "" "s/xdebug.remote_autostart=1/xdebug.remote_autostart=0/g" ' . $iniPath . 'z-performance.ini');
             info('xdebug.remote_autostart is now disabled.');
-
             return true;
         }
         warning('Cannot find z-performance.ini, please re-install Valet+');
-
         return false;
     }
 
@@ -303,7 +302,7 @@ class PhpFpm
      * @return string
      * @internal param bool $asFormula
      */
-    function linkedPhp()
+    public function linkedPhp()
     {
         if (!$this->files->isLink('/usr/local/bin/php')) {
             throw new DomainException("Unable to determine linked PHP.");
@@ -327,7 +326,7 @@ class PhpFpm
      *
      * @return bool
      */
-    function hasInstalledPhp()
+    public function hasInstalledPhp()
     {
         foreach (self::SUPPORTED_PHP_FORMULAE as $version => $brewName) {
             if ($this->brew->installed($brewName)) {
@@ -343,7 +342,7 @@ class PhpFpm
      *
      * @return void
      */
-    function updateConfiguration()
+    public function updateConfiguration()
     {
         $contents = $this->files->get($this->fpmConfigPath());
 
@@ -353,8 +352,11 @@ class PhpFpm
         $contents = preg_replace('/^;?listen\.owner = .+$/m', 'listen.owner = ' . user(), $contents);
         $contents = preg_replace('/^;?listen\.group = .+$/m', 'listen.group = staff', $contents);
         $contents = preg_replace('/^;?listen\.mode = .+$/m', 'listen.mode = 0777', $contents);
-        $contents = preg_replace('/^;?php_admin_value\[error_log\] = .+$/m',
-            'php_admin_value[error_log] = ' . VALET_HOME_PATH . '/Log/php.log', $contents);
+        $contents = preg_replace(
+            '/^;?php_admin_value\[error_log\] = .+$/m',
+            'php_admin_value[error_log] = ' . VALET_HOME_PATH . '/Log/php.log',
+            $contents
+        );
         $this->files->put($this->fpmConfigPath(), $contents);
 
         $this->writePerformanceConfiguration();
@@ -376,7 +378,7 @@ class PhpFpm
         $this->files->putAsUser($phpIniPath, $contents);
     }
 
-    function writePerformanceConfiguration()
+    public function writePerformanceConfiguration()
     {
         $path = $this->iniPath() . 'z-performance.ini';
 
@@ -397,61 +399,41 @@ class PhpFpm
         $this->files->putAsUser($path, $contents);
     }
 
-    function checkInstallation()
+    public function checkInstallation()
     {
         // Check for errors within the installation of php.
         info('[php] Checking for errors within the php installation...');
-        if (
-            $this->brew->installed('php56') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '5.6/ext-intl.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '5.6/ext-mcrypt.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '5.6/ext-apcu.ini') &&
-
-            $this->brew->installed('php70') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.0/ext-intl.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.0/ext-mcrypt.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.0/ext-apcu.ini') &&
-
-            $this->brew->installed('php71') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.1/ext-intl.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.1/ext-mcrypt.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.1/ext-apcu.ini') &&
-
-            $this->brew->installed('php72') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.2/ext-intl.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.2/ext-mcrypt.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.2/ext-apcu.ini') &&
-
-            $this->brew->installed('php73') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.3/ext-intl.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.3/ext-mcrypt.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.3/ext-apcu.ini') &&
-
-            $this->brew->installed('php74') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.4/ext-intl.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.4/ext-mcrypt.ini') &&
-            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.4/ext-apcu.ini') &&
-
-
-            $this->brew->hasTap(self::DEPRECATED_PHP_TAP) &&
-            $this->brew->installed('n98-magerun') &&
-            $this->brew->installed('n98-magerun2') &&
-            $this->brew->installed('drush')
+        if ($this->brew->installed('php56') ||
+            $this->brew->installed('php70') ||
+            $this->brew->installed('php71') ||
+            $this->brew->installed('php72') ||
+            $this->brew->installed('n98-magerun') ||
+            $this->brew->installed('n98-magerun2') ||
+            $this->brew->installed('drush') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '5.6/ext-intl.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '5.6/ext-mcrypt.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '5.6/ext-apcu.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.0/ext-intl.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.0/ext-mcrypt.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.0/ext-apcu.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.1/ext-intl.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.1/ext-mcrypt.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.1/ext-apcu.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.2/ext-intl.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.2/ext-mcrypt.ini') ||
+            $this->files->exists(self::LOCAL_PHP_FOLDER . '7.2/ext-apcu.ini') ||
+            $this->brew->hasTap(self::DEPRECATED_PHP_TAP)
         ) {
-            // No errors found return, do not run fix logic.
-           warning("[php] Valet+ found errors within the installation.\n
+            // Errors found - prompt to run fix logic
+            throw new DomainException("[php] Valet+ found errors within the installation.\n
             run: valet fix for valet to try and resolve these errors");
-            PhpFpm::fix(false);
-            Pecl::fix();
-
-            return;
         }
     }
 
     /**
      * Fixes common problems with php installations from Homebrew.
      */
-    function fix($reinstall)
+    public function fix($reinstall)
     {
         // Remove old homebrew/php tap packages.
         info('Removing all old php56- packages from homebrew/php tap');
@@ -462,10 +444,6 @@ class PhpFpm
         output($this->cli->runAsUser('brew list | grep php71- | xargs brew uninstall'));
         info('Removing all old php72- packages from homebrew/php tap');
         output($this->cli->runAsUser('brew list | grep php72- | xargs brew uninstall'));
-        info('Removing all old php73- packages from homebrew/php tap');
-        output($this->cli->runAsUser('brew list | grep php73- | xargs brew uninstall'));
-        info('Removing all old php74- packages from homebrew/php tap');
-        output($this->cli->runAsUser('brew list | grep php74- | xargs brew uninstall'));
 
         // Remove deprecated n98-magerun packages.
         info('Removing all old n98-magerun packages from homebrew/php tap');
@@ -476,7 +454,7 @@ class PhpFpm
         output($this->cli->runAsUser('brew list | grep drush | xargs brew uninstall'));
 
         // Disable extensions that are not managed by the PECL manager or within php core.
-        $deprecatedVersions = ['5.6', '7.0', '7.1', '7.2', '7.3', '7.4'];
+        $deprecatedVersions = ['5.6', '7.0', '7.1', '7.2'];
         $deprecatedExtensions = ['apcu', 'intl', 'mcrypt'];
         foreach ($deprecatedVersions as $phpVersion) {
             info('[php' . $phpVersion . '] Disabling modules: ' . implode(', ', $deprecatedExtensions));
@@ -503,16 +481,14 @@ class PhpFpm
             output($this->cli->runAsUser('brew uninstall php72'));
             info('Trying to remove php73...');
             output($this->cli->runAsUser('brew uninstall php73'));
-            info('Trying to remove php74...');
-            output($this->cli->runAsUser('brew uninstall php74'));
         }
 
-        // If the current php is not 7.4, link 7.4.
+        // If the current php is not 7.2, link 7.2.
         info('Installing and linking new PHP homebrew/core version.');
-        output($this->cli->runAsUser('brew uninstall ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V74_VERSION]));
-        output($this->cli->runAsUser('brew install ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V74_VERSION]));
-        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V74_VERSION]));
-        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V74_VERSION] . ' --force --overwrite'));
+        output($this->cli->runAsUser('brew uninstall ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION]));
+        output($this->cli->runAsUser('brew install ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION]));
+        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION]));
+        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION] . ' --force --overwrite'));
 
         if ($this->brew->hasTap(self::DEPRECATED_PHP_TAP)) {
             info('[brew] untapping formulae ' . self::DEPRECATED_PHP_TAP);
@@ -520,7 +496,7 @@ class PhpFpm
         }
 
         warning("Please check your linked php version, you might need to restart your terminal!" .
-            "\nLinked PHP should be php 7.4:");
+            "\nLinked PHP should be php 7.2:");
         output($this->cli->runAsUser('php -v'));
     }
 }

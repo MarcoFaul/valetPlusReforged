@@ -84,7 +84,7 @@ class Mysql
     public function verifyType($type)
     {
         if (!\in_array($type, $this->supportedVersions())) {
-            throw new DomainException('Invalid Mysql type given. Available:' . implode('/', $this->supportedVersions()));
+            throw new DomainException('Invalid Mysql type given. Available: mysql@5.7/mariadb');
         }
     }
 
@@ -95,7 +95,7 @@ class Mysql
      */
     public function supportedVersions()
     {
-        return ['mysql@8', 'mysql@5.7', 'mariadb'];
+        return ['mysql@5.7', 'mariadb'];
     }
 
     /**
@@ -179,7 +179,7 @@ class Mysql
     public function setRootPassword($oldPwd = '', $newPwd = self::MYSQL_ROOT_PASSWORD)
     {
         $success = true;
-        $this->cli->runAsUser("mysqladmin -u root --password='".$oldPwd."' password ".$newPwd, function() use (&$success) {
+        $this->cli->runAsUser("mysqladmin -u root --password='".$oldPwd."' password ".$newPwd, function () use (&$success) {
             warning('Setting password for root user failed. ');
             $success = false;
         });
