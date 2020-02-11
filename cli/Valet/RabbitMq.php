@@ -37,7 +37,7 @@ class RabbitMq extends AbstractService
      *
      * @return void
      */
-    public function install()
+    public function install(): void
     {
         if ($this->installed()) {
             info('[rabbitmq] already installed');
@@ -50,11 +50,11 @@ class RabbitMq extends AbstractService
     }
 
     /**
-     * Returns wether rabbitmq is installed or not.
+     * Returns whenever rabbitmq is installed or not.
      *
      * @return bool
      */
-    public function installed()
+    public function installed(): bool
     {
         return $this->brew->installed('rabbitmq');
     }
@@ -64,7 +64,7 @@ class RabbitMq extends AbstractService
      *
      * @return void
      */
-    public function restart()
+    public function restart(): void
     {
         if (!$this->installed() || !$this->isEnabled()) {
             return;
@@ -79,7 +79,7 @@ class RabbitMq extends AbstractService
      *
      * @return void
      */
-    public function stop()
+    public function stop(): void
     {
         if (!$this->installed()) {
             return;
@@ -94,7 +94,7 @@ class RabbitMq extends AbstractService
      *
      * @return void
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->stop();
     }

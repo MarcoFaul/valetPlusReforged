@@ -4,14 +4,14 @@
  * Define the user's "~/.valet" path.
  */
 
-define('VALET_HOME_PATH', posix_getpwuid(posix_geteuid())['dir'].'/.valet');
+define('VALET_HOME_PATH', posix_getpwuid(posix_geteuid())['dir'] . '/.valet');
 define('VALET_STATIC_PREFIX', '41c270e4-5535-4daa-b23e-c269744c2f45');
 
 /**
  * Load the Valet configuration.
  */
 $valetConfig = json_decode(
-    file_get_contents(VALET_HOME_PATH.'/config.json'), true
+    file_get_contents(VALET_HOME_PATH . '/config.json'), true
 );
 
 /**
@@ -22,9 +22,9 @@ $uri = urldecode(
 );
 
 $siteName = basename(
-    // Filter host to support xip.io feature
+// Filter host to support xip.io feature
     $_SERVER['HTTP_HOST'],
-    '.'.$valetConfig['domain']
+    '.' . $valetConfig['domain']
 );
 
 if (strpos($siteName, 'www.') === 0) {
@@ -48,31 +48,31 @@ if (isset($valetConfig['rewrites'])) {
 /**
  * Determine the fully qualified path to the site.
  */
-$valetSitePath = apcu_fetch('valet_site_path'.$siteName);
+$valetSitePath = apcu_fetch('valet_site_path' . $siteName);
 $domain = array_slice(explode('.', $siteName), -1)[0];
 
-if(!$valetSitePath) {
+if (!$valetSitePath) {
     foreach ($valetConfig['paths'] as $path) {
-        if (is_dir($path.'/'.$siteName)) {
-            $valetSitePath = $path.'/'.$siteName;
+        if (is_dir($path . '/' . $siteName)) {
+            $valetSitePath = $path . '/' . $siteName;
             break;
         }
 
-        if (is_dir($path.'/'.$domain)) {
-            $valetSitePath = $path.'/'.$domain;
+        if (is_dir($path . '/' . $domain)) {
+            $valetSitePath = $path . '/' . $domain;
             break;
         }
     }
 
     if (!$valetSitePath) {
         http_response_code(404);
-        require __DIR__.'/cli/templates/404.php';
+        require __DIR__ . '/cli/templates/404.php';
         exit;
     }
 
     $valetSitePath = realpath($valetSitePath);
 
-    apcu_add('valet_site_path'.$siteName, $valetSitePath, 3600);
+    apcu_add('valet_site_path' . $siteName, $valetSitePath, 3600);
 }
 
 /**
@@ -80,11 +80,11 @@ if(!$valetSitePath) {
  */
 $valetDriver = null;
 
-require __DIR__.'/cli/drivers/require.php';
+require __DIR__ . '/cli/drivers/require.php';
 
 $valetDriver = ValetDriver::assign($valetSitePath, $siteName, $uri);
 
-if (! $valetDriver) {
+if (!$valetDriver) {
     http_response_code(404);
     echo 'Could not find suitable driver for your project.';
     exit;
@@ -107,7 +107,7 @@ $uri = $valetDriver->mutateUri($uri);
  */
 $isPhpFile = pathinfo($uri, PATHINFO_EXTENSION) === 'php';
 
-if ($uri !== '/' && ! $isPhpFile && $staticFilePath = $valetDriver->isStaticFile($valetSitePath, $siteName, $uri)) {
+if ($uri !== '/' && !$isPhpFile && $staticFilePath = $valetDriver->isStaticFile($valetSitePath, $siteName, $uri)) {
     return $valetDriver->serveStaticFile($staticFilePath, $valetSitePath, $siteName, $uri);
 }
 
@@ -118,7 +118,7 @@ $frontControllerPath = $valetDriver->frontControllerPath(
     $valetSitePath, $siteName, $uri
 );
 
-if (! $frontControllerPath) {
+if (!$frontControllerPath) {
     http_response_code(404);
     echo 'Did not get front controller from driver. Please return a front controller to be executed.';
     exit;

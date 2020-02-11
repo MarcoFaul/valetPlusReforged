@@ -27,7 +27,7 @@ class Memcache
      *
      * @return bool
      */
-    public function install()
+    public function install(): bool
     {
         $restart = false;
         if ($this->brew->installed('libmemcached')) {
@@ -50,7 +50,7 @@ class Memcache
      *
      * @return bool
      */
-    public function uninstall()
+    public function uninstall(): bool
     {
         info('[memcached] Uninstalling');
         $removed = $this->pecl->disableExtension('memcached');

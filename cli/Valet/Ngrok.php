@@ -2,8 +2,8 @@
 
 namespace Valet;
 
-use Httpful\Request;
 use DomainException;
+use Httpful\Request;
 
 class Ngrok
 {
@@ -14,9 +14,9 @@ class Ngrok
      *
      * @return string
      */
-    public function currentTunnelUrl()
+    public function currentTunnelUrl(): string
     {
-        return retry(20, function () {
+        return retry(20, function() {
             $body = Request::get($this->tunnelsEndpoint)->send()->body;
 
             // If there are active tunnels on the Ngrok instance we will spin through them and
@@ -33,10 +33,11 @@ class Ngrok
     /**
      * Find the HTTP tunnel URL from the list of tunnels.
      *
-     * @param  array  $tunnels
+     * @param array $tunnels
+     *
      * @return string|null
      */
-    public function findHttpTunnelUrl($tunnels)
+    public function findHttpTunnelUrl(array $tunnels): ?string
     {
         foreach ($tunnels as $tunnel) {
             if ($tunnel->proto === 'http') {

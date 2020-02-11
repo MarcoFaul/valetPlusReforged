@@ -11,8 +11,11 @@ if (PHP_OS !== 'Darwin' && ! $inTestingEnvironment) {
     exit(1);
 }
 
-if (version_compare(PHP_VERSION, '5.6.0', '<')) {
-    echo "Valet requires PHP 5.6 or later.";
+# read composer.json the get min php version
+$minPHPVersion = str_replace('>=', '', json_decode(file_get_contents(__DIR__ . '/../../composer.json'), true)['require']['php']);
+
+if (version_compare(PHP_VERSION, '7.2', '<')) {
+    echo "Valet requires PHP 7.2 or later.";
 
     exit(1);
 }

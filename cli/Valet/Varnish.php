@@ -12,22 +12,17 @@ class Varnish extends AbstractService
     /**
      * Create a new instance.
      *
-     * @param  Brew          $brew
-     * @param  CommandLine   $cli
-     * @param  Filesystem    $files
-     * @param  Configuration $configuration
-     * @param  Site          $site
+     * @param Brew $brew
+     * @param CommandLine $cli
+     * @param Filesystem $files
+     * @param Configuration $configuration
+     * @param Site $site
      */
-    public function __construct(
-        Brew $brew,
-        CommandLine $cli,
-        Filesystem $files,
-        Configuration $configuration,
-        Site $site
-    ) {
-        $this->cli   = $cli;
-        $this->brew  = $brew;
-        $this->site  = $site;
+    public function __construct(Brew $brew, CommandLine $cli, Filesystem $files, Configuration $configuration, Site $site)
+    {
+        $this->cli = $cli;
+        $this->brew = $brew;
+        $this->site = $site;
         $this->files = $files;
         parent::__construct($configuration);
     }
@@ -37,7 +32,7 @@ class Varnish extends AbstractService
      *
      * @return void
      */
-    public function install()
+    public function install(): void
     {
         if ($this->installed()) {
             info('[varnish] already installed');
@@ -50,11 +45,11 @@ class Varnish extends AbstractService
     }
 
     /**
-     * Returns wether varnish is installed or not.
+     * Returns whenever varnish is installed or not.
      *
      * @return bool
      */
-    public function installed()
+    public function installed(): bool
     {
         return $this->brew->installed('varnish');
     }
@@ -64,7 +59,7 @@ class Varnish extends AbstractService
      *
      * @return void
      */
-    public function restart()
+    public function restart(): void
     {
         if (!$this->installed() || !$this->isEnabled()) {
             return;
@@ -79,7 +74,7 @@ class Varnish extends AbstractService
      *
      * @return void
      */
-    public function stop()
+    public function stop(): void
     {
         if (!$this->installed()) {
             return;
@@ -90,7 +85,7 @@ class Varnish extends AbstractService
     }
 
     /**
-     * Prepare for uninstallation.
+     * Wrapper to stop
      *
      * @return void
      */

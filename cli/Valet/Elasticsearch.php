@@ -9,14 +9,14 @@ class Elasticsearch
     const NGINX_CONFIGURATION_STUB = __DIR__ . '/../stubs/elasticsearch.conf';
     const NGINX_CONFIGURATION_PATH = '/usr/local/etc/nginx/valet/elasticsearch.conf';
 
-    const ES_CONFIG_YAML          = '/usr/local/etc/elasticsearch/elasticsearch.yml';
-    const ES_CONFIG_DATA_PATH     = 'path.data';
+    const ES_CONFIG_YAML = '/usr/local/etc/elasticsearch/elasticsearch.yml';
+    const ES_CONFIG_DATA_PATH = 'path.data';
     const ES_CONFIG_DATA_BASEPATH = '/usr/local/var/';
 
-    const ES_FORMULA_NAME    = 'elasticsearch';
-    const ES_V24_VERSION     = '2.4';
-    const ES_V56_VERSION     = '5.6';
-    const ES_V68_VERSION     = '6.8';
+    const ES_FORMULA_NAME = 'elasticsearch';
+    const ES_V24_VERSION = '2.4';
+    const ES_V56_VERSION = '5.6';
+    const ES_V68_VERSION = '6.8';
     const ES_DEFAULT_VERSION = self::ES_V24_VERSION;
 
     const SUPPORTED_ES_FORMULAE = [
@@ -34,12 +34,13 @@ class Elasticsearch
 
     /**
      * Elasticsearch constructor.
-     * @param Brew          $brew
-     * @param CommandLine   $cli
-     * @param Filesystem    $files
+     *
+     * @param Brew $brew
+     * @param CommandLine $cli
+     * @param Filesystem $files
      * @param Configuration $configuration
-     * @param Site          $site
-     * @param PhpFpm        $phpFpm
+     * @param Site $site
+     * @param PhpFpm $phpFpm
      */
     public function __construct(
         Brew $brew,
@@ -48,22 +49,24 @@ class Elasticsearch
         Configuration $configuration,
         Site $site,
         PhpFpm $phpFpm
-    ) {
-        $this->cli           = $cli;
-        $this->brew          = $brew;
-        $this->site          = $site;
-        $this->files         = $files;
+    )
+    {
+        $this->cli = $cli;
+        $this->brew = $brew;
+        $this->site = $site;
+        $this->files = $files;
         $this->configuration = $configuration;
-        $this->phpFpm        = $phpFpm;
+        $this->phpFpm = $phpFpm;
     }
 
     /**
      * Install the service.
      *
      * @param string $version
+     *
      * @return void
      */
-    public function install($version = self::ES_DEFAULT_VERSION)
+    public function install(string $version = self::ES_DEFAULT_VERSION): void
     {
         if (!$this->files->exists(self::NGINX_CONFIGURATION_PATH)) {
             $domain = $this->configuration->read()['domain'];
@@ -102,9 +105,10 @@ class Elasticsearch
      * Returns wether Elasticsearch is installed.
      *
      * @param string $version
+     *
      * @return bool
      */
-    public function installed($version = null)
+    public function installed(string $version = null): bool
     {
         $versions = ($version ? [$version] : array_keys(self::SUPPORTED_ES_FORMULAE));
         foreach ($versions as $version) {
@@ -120,9 +124,10 @@ class Elasticsearch
      * Restart the service.
      *
      * @param string $version
+     *
      * @return void
      */
-    public function restart($version = null)
+    public function restart(?string $version = null): void
     {
         $version = ($version ? $version : $this->getCurrentVersion());
         $version = $this->installed($version);
@@ -138,9 +143,10 @@ class Elasticsearch
      * Stop the service.
      *
      * @param string $version
+     *
      * @return void
      */
-    public function stop($version = null)
+    public function stop(?string $version = null): void
     {
         $version = ($version ? $version : $this->getCurrentVersion());
         $version = $this->installed($version);
@@ -158,7 +164,7 @@ class Elasticsearch
      *
      * @return void
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->stop();
     }
@@ -166,7 +172,7 @@ class Elasticsearch
     /**
      * @param $domain
      */
-    public function updateDomain($domain)
+    public function updateDomain(string $domain): void
     {
         if ($this->files->exists(self::NGINX_CONFIGURATION_PATH)) {
             $this->files->putAsUser(
@@ -183,16 +189,15 @@ class Elasticsearch
     /**
      * Switch between versions of installed Elasticsearch. Switch to the provided version.
      *
-     * @param $version
+     * @param string $version
      */
-    public function switchTo($version)
+    public function switchTo(string $version): void
     {
         $currentVersion = $this->getCurrentVersion();
 
         if (!array_key_exists($version, self::SUPPORTED_ES_FORMULAE)) {
             throw new DomainException("This version of Elasticsearch is not supported. The following versions are supported: " . implode(', ', array_keys(self::SUPPORTED_ES_FORMULAE)) . ($currentVersion ? "\nCurrent version is " . $currentVersion : ""));
         }
-
 
         // If the current version equals that of the current PHP version, do not switch.
         if ($version === $currentVersion) {
@@ -212,13 +217,14 @@ class Elasticsearch
 
         // Alter elasticsearch data path in config yaml.
         if (extension_loaded('yaml')) {
-            $config                            = yaml_parse_file(self::ES_CONFIG_YAML);
+            $config = yaml_parse_file(self::ES_CONFIG_YAML);
             $config[self::ES_CONFIG_DATA_PATH] = self::ES_CONFIG_DATA_BASEPATH . self::ES_FORMULA_NAME . '@' . $version . '/';
             yaml_emit_file(self::ES_CONFIG_YAML, $config);
         } else {
             // Install PHP dependencies through installation of PHP.
             $this->phpFpm->install();
             warning("Switching Elasticsearch requires PECL extension yaml. Try switching again.");
+
             return;
         }
 
@@ -231,7 +237,7 @@ class Elasticsearch
     /**
      * Returns the current running version.
      *
-     * @return bool|int|string
+     * @return bool|string
      */
     public function getCurrentVersion()
     {

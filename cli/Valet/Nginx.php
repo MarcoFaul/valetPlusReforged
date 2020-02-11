@@ -4,6 +4,7 @@ namespace Valet;
 
 use DomainException;
 
+//@TODO: refactor
 class Nginx
 {
     public $brew;
@@ -39,9 +40,9 @@ class Nginx
     /**
      * Install service.
      *
-     * @return void
+     * @return string
      */
-    public function install()
+    public function install(): string
     {
         if (!$this->brew->hasInstalledNginx()) {
             $this->brew->installOrFail('nginx');
@@ -59,7 +60,7 @@ class Nginx
      *
      * @return void
      */
-    public function installConfiguration()
+    public function installConfiguration(): void
     {
         $contents = $this->files->get(__DIR__.'/../stubs/nginx.conf');
 
@@ -74,10 +75,8 @@ class Nginx
      *
      * @return void
      */
-    public function installServer()
+    public function installServer(): void
     {
-        $domain = $this->configuration->read()['domain'];
-
         $this->files->ensureDirExists('/usr/local/etc/nginx/valet');
 
         $this->files->putAsUser(
@@ -102,7 +101,7 @@ class Nginx
      *
      * @return void
      */
-    public function installNginxDirectory()
+    public function installNginxDirectory(): void
     {
         if (! $this->files->isDir($nginxDirectory = VALET_HOME_PATH.'/Nginx')) {
             $this->files->mkdirAsUser($nginxDirectory);
@@ -116,7 +115,7 @@ class Nginx
     /**
      * Check nginx.conf for errors.
      */
-    private function lint()
+    private function lint(): void
     {
         $this->cli->quietly(
             'sudo nginx -c '.static::NGINX_CONF.' -t',
@@ -131,7 +130,7 @@ class Nginx
      *
      * @return void
      */
-    public function rewriteSecureNginxFiles()
+    public function rewriteSecureNginxFiles(): void
     {
         $domain = $this->configuration->read()['domain'];
 
@@ -143,7 +142,7 @@ class Nginx
      *
      * @return string
      */
-    public function restart()
+    public function restart(): string
     {
         $this->lint();
 
@@ -157,7 +156,7 @@ class Nginx
      *
      * @return void
      */
-    public function stop()
+    public function stop(): void
     {
         info('[nginx] Stopping');
 
@@ -169,7 +168,7 @@ class Nginx
      *
      * @return void
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->stop();
     }

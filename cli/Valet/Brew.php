@@ -3,7 +3,7 @@
 namespace Valet;
 
 use DomainException;
-
+//@TODO: refactor paths
 class Brew
 {
 
@@ -13,8 +13,8 @@ class Brew
     /**
      * Create a new Brew instance.
      *
-     * @param  CommandLine $cli
-     * @param  Filesystem $files
+     * @param CommandLine $cli
+     * @param Filesystem $files
      */
     public function __construct(CommandLine $cli, Filesystem $files)
     {
@@ -25,10 +25,11 @@ class Brew
     /**
      * Determine if the given formula is installed.
      *
-     * @param  string $formula
+     * @param string $formula
+     *
      * @return bool
      */
-    public function installed($formula)
+    public function installed(string $formula): bool
     {
         return in_array($formula, explode(PHP_EOL, $this->cli->runAsUser('brew list | grep ' . $formula)));
     }
@@ -38,7 +39,7 @@ class Brew
      *
      * @return bool
      */
-    public function hasInstalledNginx()
+    public function hasInstalledNginx(): bool
     {
         return $this->installed('nginx')
             || $this->installed('nginx-full');
@@ -49,20 +50,44 @@ class Brew
      *
      * @return string
      */
-    public function nginxServiceName()
+    public function nginxServiceName(): string
     {
         return $this->installed('nginx-full') ? 'nginx-full' : 'nginx';
     }
 
     /**
-     * Ensure that the given formula is installed.
+     * Remove the "sudoers.d" entry for running Brew.
      *
-     * @param  string $formula
-     * @param  array $options
-     * @param  array $taps
      * @return void
      */
-    public function ensureInstalled($formula, $options = [], $taps = [])
+    function removeSudoersEntry(): void
+    {
+        $this->cli->quietly('rm /etc/sudoers.d/brew');
+    }
+
+    /**
+     * Create the "sudoers.d" entry for running Brew.
+     *
+     * @return void
+     */
+    function createSudoersEntry(): void
+    {
+        $this->files->ensureDirExists('/etc/sudoers.d');
+
+        $this->files->put('/etc/sudoers.d/brew', 'Cmnd_Alias BREW = /usr/local/bin/brew *
+%admin ALL=(root) NOPASSWD:SETENV: BREW' . PHP_EOL);
+    }
+
+    /**
+     * Ensure that the given formula is installed.
+     *
+     * @param string $formula
+     * @param array $options
+     * @param array $taps
+     *
+     * @return void
+     */
+    public function ensureInstalled(string $formula, array $options = [], array $taps = []): void
     {
         if (!$this->installed($formula)) {
             $this->installOrFail($formula, $options, $taps);
@@ -72,12 +97,13 @@ class Brew
     /**
      * Ensure that the given formula is uninstalled.
      *
-     * @param  string $formula
-     * @param  array $options
-     * @param  array $taps
+     * @param string $formula
+     * @param array $options
+     * @param array $taps
+     *
      * @return void
      */
-    public function ensureUninstalled($formula, $options = [], $taps = [])
+    public function ensureUninstalled(string $formula, array $options = [], array $taps = []): void
     {
         if ($this->installed($formula)) {
             $this->uninstallOrFail($formula, $options, $taps);
@@ -87,12 +113,13 @@ class Brew
     /**
      * Install the given formula and throw an exception on failure.
      *
-     * @param  string $formula
-     * @param  array $options
-     * @param  array $taps
+     * @param string $formula
+     * @param array $options
+     * @param array $taps
+     *
      * @return void
      */
-    public function installOrFail($formula, $options = [], $taps = [])
+    public function installOrFail(string $formula, array $options = [], array $taps = []): void
     {
         info('[' . $formula . '] Installing');
 
@@ -102,7 +129,7 @@ class Brew
 
         $this->cli->runAsUser(
             trim('brew install ' . $formula . ' ' . implode(' ', $options)),
-            function ($exitCode, $errorOutput) use ($formula) {
+            function($exitCode, $errorOutput) use ($formula) {
                 output($errorOutput);
 
                 throw new DomainException('Brew was unable to install [' . $formula . '].');
@@ -113,12 +140,13 @@ class Brew
     /**
      * Uninstall the given formula and throw an exception on failure.
      *
-     * @param  string $formula
-     * @param  array $options
-     * @param  array $taps
+     * @param string $formula
+     * @param array $options
+     * @param array $taps
+     *
      * @return void
      */
-    public function uninstallOrFail($formula, $options = [], $taps = [])
+    public function uninstallOrFail(string $formula, array $options = [], array $taps = []): void
     {
         info('[' . $formula . '] Uninstalling');
 
@@ -128,7 +156,7 @@ class Brew
 
         $this->cli->runAsUser(
             trim('brew uninstall ' . $formula . ' ' . implode(' ', $options)),
-            function ($exitCode, $errorOutput) use ($formula) {
+            function($exitCode, $errorOutput) use ($formula) {
                 output($errorOutput);
 
                 throw new DomainException('Brew was unable to uninstall [' . $formula . '].');
@@ -139,10 +167,11 @@ class Brew
     /**
      * Tap the given formulas.
      *
-     * @param  dynamic [string]  $formula
+     * @param mixed $formula
+     *
      * @return void
      */
-    public function tap($formulas)
+    public function tap($formulas): void
     {
         $formulas = is_array($formulas) ? $formulas : func_get_args();
 
@@ -154,10 +183,11 @@ class Brew
     /**
      * Untap the given formulas.
      *
-     * @param  dynamic [string]  $formula
+     * @param mixed $formula
+     *
      * @return void
      */
-    public function unTap($formulas)
+    public function unTap($formulas): void
     {
         $formulas = is_array($formulas) ? $formulas : func_get_args();
 
@@ -169,10 +199,11 @@ class Brew
     /**
      * Check if brew has the given tap.
      *
-     * @param $formula
+     * @param string $formula
+     *
      * @return bool
      */
-    public function hasTap($formula)
+    public function hasTap(string $formula): bool
     {
         return strpos($this->cli->runAsUser("brew tap | grep $formula"), $formula) !== false;
     }
@@ -180,7 +211,7 @@ class Brew
     /**
      * Restart the given Homebrew services.
      *
-     * @param
+     * @param mixed $services
      */
     public function restartService($services)
     {
@@ -199,9 +230,9 @@ class Brew
     /**
      * Stop the given Homebrew services.
      *
-     * @param
+     * @param mixed $services
      */
-    public function stopService($services)
+    public function stopService($services): void
     {
         $services = is_array($services) ? $services : func_get_args();
 
@@ -217,13 +248,15 @@ class Brew
     /**
      * Checks wether the requested services is running.
      *
-     * @param $formula
+     * @param string $formula
+     *
      * @return bool
      */
-    public function isStartedService($formula)
+    public function isStartedService(string $formula): bool
     {
         $info = explode(" ", trim(str_replace($formula, "", $this->cli->runAsUser('brew services list | grep ' . $formula))));
         $state = array_shift($info);
+
         return ($state === 'started');
     }
 }

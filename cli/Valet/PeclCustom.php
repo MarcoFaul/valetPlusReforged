@@ -77,7 +77,7 @@ class PeclCustom extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function installExtensions($onlyDefaults = true)
+    public function installExtensions(bool $onlyDefaults = true): void
     {
         info("[PECL-CUSTOM] Installing extensions");
         foreach (self::EXTENSIONS as $extension => $versions) {
@@ -94,11 +94,11 @@ class PeclCustom extends AbstractPecl
      * Install a single extension if not already installed, default is true and has a version for this PHP version.
      * If version equals false the extension will never be installed for this PHP version.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
      * @return bool
      */
-    public function installExtension($extension)
+    public function installExtension(string $extension): bool
     {
         $version = $this->getVersion($extension);
 
@@ -115,11 +115,10 @@ class PeclCustom extends AbstractPecl
     /**
      * Install a single custom extension.
      *
-     * @param $extension
-     *    The extension key name.
-     * @param $url
+     * @param string $extension
+     * @param string $url
      */
-    public function install($extension, $url)
+    public function install(string $extension, string $url): void
     {
         if (is_null($url)) {
             $phpVersion = $this->getPhpVersion();
@@ -156,18 +155,18 @@ class PeclCustom extends AbstractPecl
     /**
      * Download and unpack a custom extension.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
-     * @param $url
+     * @param string $url
      *    The extension url
-     * @param $fileName
+     * @param string $fileName
      *    The file name of the packaged directory.
-     * @param $extensionAlias
+     * @param string $extensionAlias
      *    The extension alias which equals the name of the .so file. E.G: xdebug.so
-     * @param $extensionDirectory
+     * @param string $extensionDirectory
      *    The directory where the .so file needs to be placed.
      */
-    public function downloadExtension($extension, $url, $fileName, $extensionAlias, $extensionDirectory)
+    public function downloadExtension(string $extension, string $url, string $fileName, string $extensionAlias, string $extensionDirectory): void
     {
         $unpackagedDirectory = $this->getPackagedDirectory($extension);
 
@@ -204,11 +203,10 @@ class PeclCustom extends AbstractPecl
      *
      * If version is false the extension will never be installed for this PHP version.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
      */
-    public function enableExtension($extension)
+    public function enableExtension(string $extension): bool
     {
         if ($this->extensionIsMissing($extension)) {
             output("\t$extension is missing, ");
@@ -234,10 +232,9 @@ class PeclCustom extends AbstractPecl
     /**
      * Install a single custom extension.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      */
-    public function enable($extension)
+    public function enable(string $extension): void
     {
         // Install php.ini directive.
         $extensionAlias = $this->getExtensionAlias($extension);
@@ -253,7 +250,7 @@ class PeclCustom extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function uninstallExtensions()
+    public function uninstallExtensions(): void
     {
         info("[PECL-CUSTOM] Removing extensions");
         foreach (self::EXTENSIONS as $extension => $versions) {
@@ -264,11 +261,10 @@ class PeclCustom extends AbstractPecl
     /**
      * Uninstall an extension if installed, by version.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
      */
-    public function uninstallExtension($extension)
+    public function uninstallExtension(string $extension): bool
     {
         $version = $this->getVersion($extension);
         if ($this->isEnabled($extension)) {
@@ -284,9 +280,9 @@ class PeclCustom extends AbstractPecl
     /**
      * Disable a single extension.
      *
-     * @param $extension
+     * @param string $extension
      */
-    public function disable($extension)
+    public function disable(string $extension): void
     {
         $this->removeIniDefinition($extension);
     }
@@ -294,11 +290,11 @@ class PeclCustom extends AbstractPecl
     /**
      * Uninstall a single extension.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
      * @param null $version
      */
-    private function uninstall($extension, $version = null)
+    private function uninstall(string $extension, $version = null): void
     {
         // Check if .so is available
         $extensionDirectory = $this->getExtensionDirectory();
@@ -315,7 +311,7 @@ class PeclCustom extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function isInstalled($extension)
+    public function isInstalled(string $extension): bool
     {
         $extensionDirectory = $this->getExtensionDirectory();
         $extensionAlias = $this->getExtensionAlias($extension);
@@ -326,10 +322,11 @@ class PeclCustom extends AbstractPecl
     /**
      * Replace all definitions of the .so file to the given extension within the php.ini file.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
+     *
+     * @return void
      */
-    private function removeIniDefinition($extension)
+    private function removeIniDefinition(string $extension): void
     {
         $phpIniPath = $this->getPhpIniPath();
         $alias = $this->getExtensionAlias($extension);
@@ -345,11 +342,11 @@ class PeclCustom extends AbstractPecl
      * the php.ini file are always ordered correctly.
      *
      * @param $phpIniPath
-     *    The path to the php.ini file.
      * @param $phpIniFile
-     *    The contents of the php.ini file.
+     *
+     * @return void
      */
-    public function saveIniFile($phpIniPath, $phpIniFile)
+    public function saveIniFile(string $phpIniPath, string $phpIniFile): void
     {
         // Ioncube loader requires to be the first zend_extension loaded from the php.ini
         // before saving the ini file check if ioncube is enabled and move it to the top of the file.
@@ -363,9 +360,11 @@ class PeclCustom extends AbstractPecl
     }
 
     /**
-     * @inheritdoc
+     * @param string $extension
+     *
+     * @return bool
      */
-    public function isEnabled($extension)
+    public function isEnabled(string $extension): bool
     {
         $alias = $this->getExtensionName($extension);
         $extensions = explode("\n", $this->cli->runAsUser("php -m | grep '$alias'"));
@@ -376,11 +375,10 @@ class PeclCustom extends AbstractPecl
      * Whether or not this extension should be enabled by default. Is set by setting the
      * 'default' key to true within the extensions configuration.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
      */
-    private function isDefaultExtension($extension)
+    private function isDefaultExtension(string $extension): bool
     {
         if (array_key_exists('default', self::EXTENSIONS[$extension])) {
             return false;
@@ -395,11 +393,10 @@ class PeclCustom extends AbstractPecl
      * Get the extension alias for the extension. Should return the alias of the .so file without the .so extension.
      * E.G: apcu, apc, xdebug, geoip, etc...
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return string
      */
-    protected function getExtensionAlias($extension)
+    protected function getExtensionAlias(string $extension): string
     {
         switch ($extension) {
             case self::IONCUBE_LOADER_EXTENSION:
@@ -412,11 +409,10 @@ class PeclCustom extends AbstractPecl
     /**
      * Get the version of the extension supported by the current PHP version.
      *
-     * @param $extension
-     *    The extension key name.
-     * @return null
+     * @param string $extension
+     * @return null|string
      */
-    private function getVersion($extension)
+    private function getVersion(string $extension): ?string
     {
         $phpVersion = $this->getPhpVersion();
 
@@ -430,11 +426,10 @@ class PeclCustom extends AbstractPecl
     /**
      * Get the file extension of the downloaded custom extension package.
      *
-     * @param $extension
-     *    The extension key name.
-     * @return mixed
+     * @param string $extension
+     * @return string
      */
-    private function getFileExtension($extension)
+    private function getFileExtension(string $extension): string
     {
         if (array_key_exists('file_extension', self::EXTENSIONS[$extension])) {
             return self::EXTENSIONS[$extension]['file_extension'];
@@ -445,11 +440,11 @@ class PeclCustom extends AbstractPecl
     /**
      * Get the directory within the packaged archive.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
-     * @return mixed
+     * @return string
      */
-    private function getPackagedDirectory($extension)
+    private function getPackagedDirectory(string $extension): string
     {
         if (array_key_exists('packaged_directory', self::EXTENSIONS[$extension])) {
             return self::EXTENSIONS[$extension]['packaged_directory'];
@@ -460,11 +455,10 @@ class PeclCustom extends AbstractPecl
     /**
      * Get the extension name for the custom extension. Used for checking php -m output.
      *
-     * @param $extension
-     *    The extension key name.
-     * @return mixed
+     * @param string $extension
+     * @return string
      */
-    private function getExtensionName($extension)
+    private function getExtensionName(string $extension): string
     {
         if (array_key_exists('extension_php_name', self::EXTENSIONS[$extension])) {
             return self::EXTENSIONS[$extension]['extension_php_name'];
@@ -479,7 +473,7 @@ class PeclCustom extends AbstractPecl
      *
      * @return bool
      */
-    public function extensionIsMissing($extension)
+    public function extensionIsMissing(string $extension): bool
     {
         $extensionDirectory = $this->getExtensionDirectory();
         $extensionAlias = $this->getExtensionAlias($extension);

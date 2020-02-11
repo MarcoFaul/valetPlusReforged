@@ -6,6 +6,7 @@ use DomainException;
 use mysqli;
 use MYSQLI_ASSOC;
 
+//@TODO: refactor
 class Mysql
 {
     const MYSQL_CONF_DIR = '/usr/local/etc';

@@ -5,6 +5,7 @@ namespace Valet;
 use Exception;
 use ValetDriver;
 
+//@TODO refactor paths
 class DevTools
 {
     const WP_CLI_TOOL = 'wp-cli';
@@ -30,11 +31,11 @@ class DevTools
     /**
      * Create a new Nginx instance.
      *
-     * @param  Brew $brew
-     * @param  CommandLine $cli
-     * @param  Filesystem $files
-     * @param  Configuration $configuration
-     * @param  Site $site
+     * @param Brew $brew
+     * @param CommandLine $cli
+     * @param Filesystem $files
+     * @param Configuration $configuration
+     * @param Site $site
      * @param Mysql $mysql
      */
     public function __construct(
@@ -44,7 +45,8 @@ class DevTools
         Configuration $configuration,
         Site $site,
         Mysql $mysql
-    ) {
+    )
+    {
         $this->cli = $cli;
         $this->brew = $brew;
         $this->site = $site;
@@ -58,7 +60,7 @@ class DevTools
      *
      * @return void
      */
-    public function install()
+    public function install(): void
     {
         info('[devtools] Installing tools');
 
@@ -76,7 +78,7 @@ class DevTools
      *
      * @return void
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         info('[devtools] Uninstalling tools');
 
@@ -89,26 +91,39 @@ class DevTools
         }
     }
 
-    public function sshkey()
+    /**
+     * @return void
+     */
+    public function sshkey(): void
     {
         $this->cli->passthru('pbcopy < ~/.ssh/id_rsa.pub');
         info('Copied ssh key to your clipboard');
     }
 
-    public function phpstorm()
+    /**
+     * @return void
+     */
+    public function phpstorm(): void
     {
         info('Opening PHPstorm');
 
         $this->cli->runAsUser('open -a PhpStorm ./');
     }
 
-    public function sourcetree()
+    /**
+     * @return void
+     */
+    public function sourcetree(): void
     {
         info('Opening SourceTree');
         $this->cli->runAsUser('open -a SourceTree ./');
     }
 
-    public function vscode()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function vscode(): void
     {
         info('Opening Visual Studio Code');
         $command = false;
@@ -132,7 +147,11 @@ class DevTools
         }
     }
 
-    public function tower()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function tower(): void
     {
         info('Opening git tower');
         if (!$this->files->exists('/Applications/Tower.app/Contents/MacOS/gittower')) {
@@ -146,6 +165,9 @@ class DevTools
         }
     }
 
+    /**
+     * @return false|string|null
+     */
     public function configure()
     {
         require realpath(__DIR__ . '/../drivers/require.php');

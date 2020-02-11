@@ -45,11 +45,11 @@ abstract class AbstractPecl
     /**
      * Get the extension type: zend_extension or extension for the custom extension.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
      * @return mixed
      */
-    protected function getExtensionType($extension)
+    protected function getExtensionType(string $extension)
     {
         if (array_key_exists('extension_type', $this::EXTENSIONS[$extension])) {
             return $this::EXTENSIONS[$extension]['extension_type'];
@@ -100,12 +100,12 @@ abstract class AbstractPecl
     /**
      * Check if the extension is enabled within the php installation.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
      * @return bool
      *   True if installed, false if not installed.
      */
-    public function isEnabled($extension)
+    public function isEnabled(string $extension)
     {
         $alias = $this->getExtensionAlias($extension);
         $extensions = explode("\n", $this->cli->runAsUser("php -m | grep $alias"));
@@ -131,7 +131,7 @@ abstract class AbstractPecl
     /**
      * Uninstall all extensions defined in EXTENSIONS.
      */
-    public function uninstallExtensions()
+    public function uninstallExtensions(): void
     {
         throw new \Exception(__METHOD__.' not implemented!');
     }
@@ -142,7 +142,7 @@ abstract class AbstractPecl
      * @param bool $onlyDefaults
      * @throws Exception if not overridden but used.
      */
-    public function installExtensions($onlyDefaults = true)
+    public function installExtensions(bool $onlyDefaults = true): void
     {
         throw new \Exception(__METHOD__.' not implemented!');
     }
@@ -150,13 +150,13 @@ abstract class AbstractPecl
     /**
      * Check if the extension is installed.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
      * @return bool True if installed, false if not installed.
      * True if installed, false if not installed.
      * @throws Exception if not overridden but used.
      */
-    protected function isInstalled($extension)
+    protected function isInstalled(string $extension)
     {
         throw new \Exception(__METHOD__.' not implemented!');
     }
@@ -165,12 +165,12 @@ abstract class AbstractPecl
      * Get the extension alias for the extension. Should return the alias of the .so file without the .so extension.
      * E.G: apcu, apc, xdebug, geoip, etc...
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
      * @return string
      * @throws Exception if not overridden but used.
      */
-    protected function getExtensionAlias($extension)
+    protected function getExtensionAlias(string $extension)
     {
         throw new \Exception(__METHOD__.' not implemented!');
     }

@@ -4,21 +4,20 @@ namespace Valet;
 
 class RedisTool extends AbstractService
 {
+    const REDIS_CONF = '/usr/local/etc/redis.conf';
     public $brew;
     public $cli;
     public $files;
     public $site;
 
-    const REDIS_CONF = '/usr/local/etc/redis.conf';
-
     /**
      * Create a new instance.
      *
-     * @param  Brew          $brew
-     * @param  CommandLine   $cli
-     * @param  Filesystem    $files
-     * @param  Configuration $configuration
-     * @param  Site          $site
+     * @param Brew $brew
+     * @param CommandLine $cli
+     * @param Filesystem $files
+     * @param Configuration $configuration
+     * @param Site $site
      */
     public function __construct(
         Brew $brew,
@@ -26,10 +25,11 @@ class RedisTool extends AbstractService
         Filesystem $files,
         Configuration $configuration,
         Site $site
-    ) {
-        $this->cli   = $cli;
-        $this->brew  = $brew;
-        $this->site  = $site;
+    )
+    {
+        $this->cli = $cli;
+        $this->brew = $brew;
+        $this->site = $site;
         $this->files = $files;
         parent::__construct($configuration);
     }
@@ -39,7 +39,7 @@ class RedisTool extends AbstractService
      *
      * @return void
      */
-    public function install()
+    public function install(): void
     {
         if ($this->installed()) {
             info('[redis] already installed');
@@ -58,7 +58,7 @@ class RedisTool extends AbstractService
      *
      * @return bool
      */
-    public function installed()
+    public function installed(): bool
     {
         return $this->brew->installed('redis');
     }
@@ -68,9 +68,9 @@ class RedisTool extends AbstractService
      *
      * @return void
      */
-    public function installConfiguration()
+    public function installConfiguration(): void
     {
-        $this->files->copy(__DIR__.'/../stubs/redis.conf', static::REDIS_CONF);
+        $this->files->copy(__DIR__ . '/../stubs/redis.conf', static::REDIS_CONF);
     }
 
     /**
@@ -78,7 +78,7 @@ class RedisTool extends AbstractService
      *
      * @return void
      */
-    public function restart()
+    public function restart(): void
     {
         if (!$this->installed() || !$this->isEnabled()) {
             return;
@@ -93,7 +93,7 @@ class RedisTool extends AbstractService
      *
      * @return void
      */
-    public function stop()
+    public function stop(): void
     {
         if (!$this->installed()) {
             return;
@@ -109,7 +109,7 @@ class RedisTool extends AbstractService
      *
      * @return void
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->stop();
     }

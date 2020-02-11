@@ -9,19 +9,20 @@ class Facade
      *
      * @return string
      */
-    public static function containerKey()
+    public static function containerKey(): string
     {
-        return 'Valet\\'.basename(str_replace('\\', '/', get_called_class()));
+        return 'Valet\\' . basename(str_replace('\\', '/', get_called_class()));
     }
 
     /**
      * Call a non-static method on the facade.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array $parameters
+     *
      * @return mixed
      */
-    public static function __callStatic($method, $parameters)
+    public static function __callStatic(string $method, array $parameters)
     {
         $resolvedInstance = Container::getInstance()->make(static::containerKey());
 
@@ -32,69 +33,91 @@ class Facade
 class Brew extends Facade
 {
 }
+
 class Pecl extends Facade
 {
 }
+
 class PeclCustom extends Facade
 {
 }
+
 class Binaries extends Facade
 {
 }
+
 class Nginx extends Facade
 {
 }
+
 class Memcache extends Facade
 {
 }
+
 class Mysql extends Facade
 {
 }
+
 class RedisTool extends Facade
 {
 }
+
 class Elasticsearch extends Facade
 {
 }
+
 class RabbitMq extends Facade
 {
 }
+
 class Varnish extends Facade
 {
 }
+
 class Mailhog extends Facade
 {
 }
+
 class CommandLine extends Facade
 {
 }
+
 class Configuration extends Facade
 {
 }
+
 class DnsMasq extends Facade
 {
 }
+
 class Filesystem extends Facade
 {
 }
+
 class Ngrok extends Facade
 {
 }
+
 class PhpFpm extends Facade
 {
 }
+
 class DevTools extends Facade
 {
 }
+
 class Site extends Facade
 {
 }
+
 class Logs extends Facade
 {
 }
+
 class Valet extends Facade
 {
 }
+
 class Script extends Facade
 {
 }

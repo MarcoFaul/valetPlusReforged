@@ -98,7 +98,7 @@ class Pecl extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function installExtensions($onlyDefaults = true)
+    public function installExtensions($onlyDefaults = true): void
     {
         info("[PECL] Installing extensions");
         foreach (self::EXTENSIONS as $extension => $versions) {
@@ -117,11 +117,10 @@ class Pecl extends AbstractPecl
      * Install a single extension if not already installed, default is true and has a version for this PHP version.
      * If version equals false the extension will not be installed for this PHP version.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
      */
-    public function installExtension($extension)
+    public function installExtension(string $extension): bool
     {
         if ($this->isInstalled($extension)) {
             output("\t$extension is already installed, skipping...");
@@ -135,11 +134,10 @@ class Pecl extends AbstractPecl
     /**
      * Install a single extension.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string$extension
      * @param null $version
      */
-    protected function install($extension, $version = null)
+    protected function install(string $extension, $version = null): void
     {
         if ($version === null) {
             $result = $this->cli->runAsUser("pecl install $extension");
@@ -168,11 +166,10 @@ class Pecl extends AbstractPecl
     /**
      * Enable an single extension if not already enabled, default is true and has a version does not equal false.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
      */
-    public function enableExtension($extension)
+    public function enableExtension(string $extension): bool
     {
         if ($this->isEnabled($extension) && $this->isEnabledCorrectly($extension)) {
             output("\t$extension is already enabled, skipping...");
@@ -189,7 +186,7 @@ class Pecl extends AbstractPecl
      * @param $extension
      *    The extension key name.
      */
-    public function enable($extension)
+    public function enable(string $extension): void
     {
         $phpIniPath = $this->getPhpIniPath();
         $phpIniFile = $this->files->get($phpIniPath);
@@ -203,7 +200,7 @@ class Pecl extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function uninstallExtensions()
+    public function uninstallExtensions(): void
     {
         info("[PECL] Removing extensions");
         foreach (self::EXTENSIONS as $extension => $versions) {
@@ -216,12 +213,10 @@ class Pecl extends AbstractPecl
     /**
      * Uninstall and disable an extension if installed.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
-     *    Whether or not an uninstall happened.
      */
-    public function disableExtension($extension)
+    public function disableExtension(string $extension): bool
     {
         $version = $this->getVersion($extension);
         if ($this->isEnabled($extension)) {
@@ -244,9 +239,8 @@ class Pecl extends AbstractPecl
      * Replace and remove all directives of the .so file for the given extension within the php.ini file.
      *
      * @param $extension
-     *    The extension key name.
      */
-    private function removeIniDefinition($extension)
+    private function removeIniDefinition(string $extension): void
     {
         $phpIniPath = $this->getPhpIniPath();
         $alias = $this->getExtensionAlias($extension);
@@ -263,7 +257,7 @@ class Pecl extends AbstractPecl
      * apcu.so so we define apc.so here as alternative.
      *
      * @param $extension
-     * @return string
+     * @return string|void
      */
     private function alternativeDisable($extension)
     {
@@ -280,9 +274,9 @@ class Pecl extends AbstractPecl
      * apcu.so so we define apc.so here as alternative.
      *
      * @param $extension
-     * @return string
+     * @return string|void
      */
-    private function alternativeUninstall($extension)
+    private function alternativeUninstall(string $extension)
     {
         switch ($extension) {
             default:
@@ -293,11 +287,11 @@ class Pecl extends AbstractPecl
     /**
      * Uninstall a single extension.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
-     * @param null $version
+     * @param null|string $version
      */
-    private function uninstall($extension, $version = null)
+    private function uninstall(string $extension, ?string $version = null): void
     {
         if ($version === null || $version === false) {
             $this->cli->passthru("pecl uninstall $extension");
@@ -311,7 +305,7 @@ class Pecl extends AbstractPecl
     /**
      * Update the default PECL channel.
      */
-    public function updatePeclChannel()
+    public function updatePeclChannel(): void
     {
         info('[PECL] Updating PECL channel: pecl.php.net');
         $this->cli->runAsUser('pecl channel-update pecl.php.net');
@@ -320,7 +314,7 @@ class Pecl extends AbstractPecl
     /**
      * Fix common problems related to the PECL/PEAR installation.
      */
-    public function fix()
+    public function fix(): void
     {
         info('[PECL] Checking pear config...');
         // Check if pear config is set correctly as per:
@@ -440,7 +434,7 @@ class Pecl extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function isInstalled($extension)
+    public function isInstalled(string $extension): bool
     {
         return strpos($this->cli->runAsUser('pecl list | grep ' . $extension), $extension) !== false;
     }
@@ -451,12 +445,13 @@ class Pecl extends AbstractPecl
      * apcu_bc installs apcu and apc both will need to be linked within the php.ini file. The default would only link
      * apcu.so so we define apc.so here as alternative.
      *
-     * @param $extension
+     * @param string $extension
      *    The extension key name.
-     * @param $phpIniFile
+     * @param string $phpIniFile
+     *
      * @return string
      */
-    private function alternativeInstall($extension, $phpIniFile)
+    private function alternativeInstall(string $extension, string $phpIniFile): string
     {
         switch ($extension) {
             default:
@@ -468,13 +463,12 @@ class Pecl extends AbstractPecl
      * Replace the .so directive within the php.ini file. Initial .so directive will be set by
      * 'pecl install {extension}'. Replacing will prevent duplicate entries.
      *
-     * @param $extension
-     *    The extension key name.
-     * @param $phpIniFile
+     * @param string $extension
+     * @param string $phpIniFile
      *
      * @return string
      */
-    private function replaceIniDefinition($extension, $phpIniFile)
+    private function replaceIniDefinition(string $extension, string $phpIniFile): string
     {
         $alias = $this->getExtensionAlias($extension);
         $type = $this->getExtensionType($extension);
@@ -487,11 +481,10 @@ class Pecl extends AbstractPecl
      * Whether or not this extension should be enabled by default. Is set by setting the
      * 'default' key to true within the extensions configuration.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
      * @return bool
      */
-    private function isDefaultExtension($extension)
+    private function isDefaultExtension(string $extension): bool
     {
         if (array_key_exists('default', self::EXTENSIONS[$extension])) {
             return false;
@@ -505,7 +498,7 @@ class Pecl extends AbstractPecl
     /**
      * @inheritdoc
      */
-    protected function getExtensionAlias($extension)
+    protected function getExtensionAlias(string $extension): string
     {
         switch ($extension) {
             default:
@@ -516,11 +509,11 @@ class Pecl extends AbstractPecl
     /**
      * Get the version of the extension supported by the current PHP version.
      *
-     * @param $extension
-     *    The extension key name.
+     * @param string $extension
+     *
      * @return null
      */
-    private function getVersion($extension)
+    private function getVersion(string $extension): ?string
     {
         $phpVersion = $this->getPhpVersion();
         if (array_key_exists($phpVersion, self::EXTENSIONS[$extension])) {
@@ -535,10 +528,10 @@ class Pecl extends AbstractPecl
      * fail. This van be solved by checking if the directive exists twice. If it does valet-plus will
      * deem the module as "disabled" and replace the existing directives with a single one.
      *
-     * @param $extension
+     * @param string $extension
      * @return bool
      */
-    private function isEnabledCorrectly($extension)
+    private function isEnabledCorrectly(string $extension): bool
     {
         $phpIniPath = $this->getPhpIniPath();
         $phpIniFile = $this->files->get($phpIniPath);
@@ -553,10 +546,10 @@ class Pecl extends AbstractPecl
     /**
      * Alternative case for checking directives of modules that depend on other modules.
      *
-     * @param $extension
+     * @param string $extension
      * @return bool
      */
-    private function isAlternativeEnabledCorrectly($extension)
+    private function isAlternativeEnabledCorrectly(string $extension): bool
     {
         switch ($extension) {
             default:
@@ -564,7 +557,12 @@ class Pecl extends AbstractPecl
         }
     }
 
-    private function replacePhpWithPear($brewname)
+    /**
+     * @param string $brewname
+     *
+     * @return string
+     */
+    private function replacePhpWithPear(string $brewname): string
     {
         return str_replace('php', 'pear', $brewname);
     }

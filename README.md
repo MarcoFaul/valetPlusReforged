@@ -8,8 +8,10 @@ Here are a few key differences compared to Valet+:
 - Add PHP 7.3, 7.4 support
 - Add Ioncube for PHP 7.3 
 - Add Elasticsearch 6.8 support
+- ADD TLD (Top-Level-Domain) command
 - Add PHP switching error messages 
 - Add Codesniffer
+- Add Trust command to add valet and brew to sudoers (no password needed anymore)
 - Add "on successful installation, open browser with valet domain"
 - Add port scan
 - Update Xdebug version update (2.2.7 -> 2.9.0)
@@ -17,10 +19,12 @@ Here are a few key differences compared to Valet+:
 - Fix MySQL Linking
 - Fix Memcache because of missing zlib
 - Fix missing Elasticsearch config
+- A lot more
 
 #### Coming soon…
-- ioncube for PHP 7.4 (https://forum.ioncube.com/viewtopic.php?t=4542&postdays=0&postorder=asc&start=15)
-- MYSQL 8 support
+- Ioncube for PHP 7.4 (https://forum.ioncube.com/viewtopic.php?t=4542&postdays=0&postorder=asc&start=15)
+- MySQL 8 support
+- default installation php 7.4
 
 ## Installation
 

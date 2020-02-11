@@ -26,7 +26,10 @@ class Script
         $this->files = $files;
     }
 
-    public function portCheck()
+    /**
+     * @return void
+     */
+    public function portCheck(): void
     {
         foreach (self::PORTS as $service => $port) {
             $result = null;
@@ -39,7 +42,10 @@ class Script
         }
     }
 
-    public function post($domain)
+    /**
+     * @param string $domain
+     */
+    public function post(string $domain): void
     {
         $this->cli->run(sprintf('open http://valet.%s', $domain));
     }

@@ -28,7 +28,6 @@ class Binaries
      * ]
      *
      * @formatter:on
-     *
      */
     const SUPPORTED_CUSTOM_BINARIES = [
         self::N98_MAGERUN => [
@@ -54,8 +53,8 @@ class Binaries
     /**
      * Create a new Brew instance.
      *
-     * @param  CommandLine $cli
-     * @param  Filesystem $files
+     * @param CommandLine $cli
+     * @param Filesystem $files
      */
     public function __construct(CommandLine $cli, Filesystem $files)
     {
@@ -68,10 +67,11 @@ class Binaries
      *
      * @param $binary
      *    The binary key name.
+     *
      * @return bool
      *    True if installed, false if not installed.
      */
-    public function installed($binary)
+    public function installed(string $binary): bool
     {
         return $this->files->exists(self::SUPPORTED_CUSTOM_BINARIES[$binary]['bin_location'] . $binary);
     }
@@ -79,7 +79,7 @@ class Binaries
     /**
      * Install all binaries defined in SUPPORTED_CUSTOM_BINARIES
      */
-    public function installBinaries()
+    public function installBinaries(): void
     {
         info("[binaries] Installing binaries");
         foreach (self::SUPPORTED_CUSTOM_BINARIES as $binary => $versions) {
@@ -95,7 +95,7 @@ class Binaries
      * @param $binary
      *    The binary key name.
      */
-    public function installBinary($binary)
+    public function installBinary(string $binary): void
     {
         $url = $this->getUrl($binary);
         $urlSplit = explode('/', $url);
@@ -110,6 +110,7 @@ class Binaries
             $this->cli->runAsUser("rm /tmp/$fileName");
             warning("$binary could not be installed, $fileName checksum does not match: " .
                 $this->getShasum($binary));
+
             return;
         }
 
@@ -125,7 +126,7 @@ class Binaries
     /**
      * Uninstall all binaries defined in SUPPORTED_CUSTOM_BINARIES
      */
-    public function uninstallBinaries()
+    public function uninstallBinaries(): void
     {
         info("[binaries] Uninstalling binaries");
         foreach (self::SUPPORTED_CUSTOM_BINARIES as $binary => $versions) {
@@ -138,10 +139,9 @@ class Binaries
     /**
      * Uninstall a single binary defined by the binary key name.
      *
-     * @param $binary
-     *    The binary key name.
+     * @param string $binary
      */
-    public function uninstallBinary($binary)
+    public function uninstallBinary(string $binary): void
     {
         $binaryLocation = $this->getBinLocation($binary);
         $this->cli->runAsUser('rm ' . $binaryLocation);
@@ -154,31 +154,29 @@ class Binaries
     /**
      * Get the shasum from the downloaded file by using the `shasum` command.
      *
-     * @param $binary
-     *    The binary key name.
-     * @param $fileName
-     *    The filename of the downloaded file.
+     * @param string $binary
+     * @param string $fileName
+     *
      * @return bool
-     *    True if matching, false if not matching.
      */
-    private function checkShasum($binary, $fileName)
+    private function checkShasum(string $binary, string $fileName): bool
     {
         $checksum = $this->cli->runAsUser("shasum -a256 /tmp/$fileName");
         $checksum = str_replace("/tmp/$fileName", '', $checksum);
         $checksum = str_replace("\n", '', $checksum);
         $checksum = str_replace(' ', '', $checksum);
+
         return $checksum === $this->getShasum($binary);
     }
 
     /**
      * Get the url that belongs to the binary key name.
      *
-     * @param $binary
-     *    The binary key name.
+     * @param string $binary
+     *
      * @return string
-     *    The url as string defined within the binary key.
      */
-    private function getUrl($binary)
+    private function getUrl(string $binary): string
     {
         if (array_key_exists('url', self::SUPPORTED_CUSTOM_BINARIES[$binary])) {
             return self::SUPPORTED_CUSTOM_BINARIES[$binary]['url'];
@@ -189,12 +187,11 @@ class Binaries
     /**
      * Get the shasum that belongs to the binary key name.
      *
-     * @param $binary
-     *    The binary key name.
+     * @param string $binary
+     *
      * @return string
-     *    The shasum as string defined within the binary key.
      */
-    private function getShasum($binary)
+    private function getShasum(string $binary): string
     {
         if (array_key_exists('shasum', self::SUPPORTED_CUSTOM_BINARIES[$binary])) {
             return self::SUPPORTED_CUSTOM_BINARIES[$binary]['shasum'];
@@ -205,12 +202,11 @@ class Binaries
     /**
      * Get the bin_location that belongs to the binary key name.
      *
-     * @param $binary
-     *    The binary key name.
+     * @param string $binary
+     *
      * @return string
-     *    The bin_location as string defined within the binary key.
      */
-    private function getBinLocation($binary)
+    private function getBinLocation(string $binary): string
     {
         if (array_key_exists('bin_location', self::SUPPORTED_CUSTOM_BINARIES[$binary])) {
             return self::SUPPORTED_CUSTOM_BINARIES[$binary]['bin_location'] . $binary;
