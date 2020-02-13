@@ -22,7 +22,7 @@ use Symfony\Component\Console\Question\Question;
 Container::setInstance(new Container);
 
 // get current version based on git describe and tags
-$version = new Version('1.5.1', __DIR__ . '/../');
+$version = new Version('1.5.2', __DIR__ . '/../');
 
 $app = new Application('Valet+ Reforged', $version->getVersion());
 
@@ -120,27 +120,6 @@ if (\is_dir(VALET_HOME_PATH)) {
 
         info('Your Valet domain has been updated to ['.$domain.'].');
     })->descriptions('Get or set the domain used for Valet sites');
-
-    /**
-     * Get or set the TLD currently being used by Valet.
-     */
-    $app->command('tld [tld]', function ($tld = null) {
-        if ($tld === null) {
-            return info(Configuration::read()['tld']);
-        }
-
-        DnsMasq::updateTld(
-            $oldTld = Configuration::read()['tld'], $tld = trim($tld, '.')
-        );
-
-        Configuration::updateKey('tld', $tld);
-
-        Site::resecureForNewTld($oldTld, $tld);
-        PhpFpm::restart();
-        Nginx::restart();
-
-        info('Your Valet TLD has been updated to ['.$tld.'].');
-    }, ['domain'])->descriptions('Get or set the TLD used for Valet sites.');
 
     /**
      * Add the current working directory to the paths configuration.
