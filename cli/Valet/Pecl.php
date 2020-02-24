@@ -98,7 +98,7 @@ class Pecl extends AbstractPecl
     /**
      * @inheritdoc
      */
-    public function installExtensions($onlyDefaults = true): void
+    public function installExtensions(bool $onlyDefaults = true): void
     {
         info("[PECL] Installing extensions");
         foreach (self::EXTENSIONS as $extension => $versions) {
