@@ -17,7 +17,7 @@ class Elasticsearch
     const ES_V24_VERSION = '2.4';
     const ES_V56_VERSION = '5.6';
     const ES_V68_VERSION = '6.8';
-    const ES_DEFAULT_VERSION = self::ES_V24_VERSION;
+    const ES_DEFAULT_VERSION = self::ES_V56_VERSION;
 
     const SUPPORTED_ES_FORMULAE = [
         self::ES_V24_VERSION => self::ES_FORMULA_NAME . '@' . self::ES_V24_VERSION,
@@ -129,9 +129,13 @@ class Elasticsearch
      */
     public function restart(?string $version = null): void
     {
-        $version = ($version ? $version : $this->getCurrentVersion());
-        $version = $this->installed($version);
-        if (!$version) {
+        $version = $version ?: $this->getCurrentVersion();
+        if (!$this->installed($version)) {
+            return;
+        }
+
+        if (array_key_exists($version, self::SUPPORTED_ES_FORMULAE) === false) {
+            warning(sprintf('No assigned Elastic Version found for: "%s"', $version));
             return;
         }
 
@@ -148,9 +152,13 @@ class Elasticsearch
      */
     public function stop(?string $version = null): void
     {
-        $version = ($version ? $version : $this->getCurrentVersion());
-        $version = $this->installed($version);
-        if (!$version) {
+        $version = ($version ?: $this->getCurrentVersion());
+        if (!$this->installed($version)) {
+            return;
+        }
+
+        if (array_key_exists($version, self::SUPPORTED_ES_FORMULAE) === false) {
+            warning(sprintf('No assigned Elastic Version found for: "%s"', $version));
             return;
         }
 
@@ -196,7 +204,7 @@ class Elasticsearch
         $currentVersion = $this->getCurrentVersion();
 
         if (!array_key_exists($version, self::SUPPORTED_ES_FORMULAE)) {
-            throw new DomainException("This version of Elasticsearch is not supported. The following versions are supported: " . implode(', ', array_keys(self::SUPPORTED_ES_FORMULAE)) . ($currentVersion ? "\nCurrent version is " . $currentVersion : ""));
+            throw new DomainException('This version of Elasticsearch is not supported. The following versions are supported: ' . implode(', ', array_keys(self::SUPPORTED_ES_FORMULAE)) . ($currentVersion ? "\nCurrent version is " . $currentVersion : ''));
         }
 
         // If the current version equals that of the current PHP version, do not switch.
@@ -223,7 +231,7 @@ class Elasticsearch
         } else {
             // Install PHP dependencies through installation of PHP.
             $this->phpFpm->install();
-            warning("Switching Elasticsearch requires PECL extension yaml. Try switching again.");
+            warning('Switching Elasticsearch requires PECL extension yaml. Try switching again.');
 
             return;
         }
@@ -231,13 +239,13 @@ class Elasticsearch
         // Start requested version.
         $this->restart($version);
 
-        info("Valet is now using " . self::SUPPORTED_ES_FORMULAE[$version] . ". You might need to reindex your data.");
+        info('Valet is now using ' . self::SUPPORTED_ES_FORMULAE[$version] . '. You might need to reindex your data.');
     }
 
     /**
      * Returns the current running version.
      *
-     * @return bool|string
+     * @return string
      */
     public function getCurrentVersion()
     {
