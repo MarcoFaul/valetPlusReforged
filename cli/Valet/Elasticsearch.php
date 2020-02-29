@@ -130,17 +130,45 @@ class Elasticsearch
     public function restart(?string $version = null): void
     {
         $version = $version ?: $this->getCurrentVersion();
-        if (!$this->installed($version)) {
+        if (!$this->installed($version) || (string)$version === '') {
             return;
         }
 
         if (array_key_exists($version, self::SUPPORTED_ES_FORMULAE) === false) {
             warning(sprintf('No assigned Elastic Version found for: "%s"', $version));
+
             return;
         }
 
         info('[' . self::SUPPORTED_ES_FORMULAE[$version] . '] Restarting');
         $this->cli->quietlyAsUser('brew services restart ' . self::SUPPORTED_ES_FORMULAE[$version]);
+    }
+
+    /**
+     * Returns the current running version.
+     *
+     * @return string
+     */
+    public function getCurrentVersion()
+    {
+        $currentVersion = false;
+        foreach (self::SUPPORTED_ES_FORMULAE as $version => $formula) {
+            if ($this->brew->isStartedService($formula)) {
+                $currentVersion = $version;
+            }
+        }
+
+        return $currentVersion;
+    }
+
+    /**
+     * Prepare for uninstallation.
+     *
+     * @return void
+     */
+    public function uninstall(): void
+    {
+        $this->stop();
     }
 
     /**
@@ -157,24 +185,21 @@ class Elasticsearch
             return;
         }
 
+        if ($version = null) {
+            warning('No Elastic Version given');
+
+            return;
+        }
+
         if (array_key_exists($version, self::SUPPORTED_ES_FORMULAE) === false) {
             warning(sprintf('No assigned Elastic Version found for: "%s"', $version));
+
             return;
         }
 
         info('[' . self::SUPPORTED_ES_FORMULAE[$version] . '] Stopping');
         $this->cli->quietly('sudo brew services stop ' . self::SUPPORTED_ES_FORMULAE[$version]);
         $this->cli->quietlyAsUser('brew services stop ' . self::SUPPORTED_ES_FORMULAE[$version]);
-    }
-
-    /**
-     * Prepare for uninstallation.
-     *
-     * @return void
-     */
-    public function uninstall(): void
-    {
-        $this->stop();
     }
 
     /**
@@ -240,22 +265,5 @@ class Elasticsearch
         $this->restart($version);
 
         info('Valet is now using ' . self::SUPPORTED_ES_FORMULAE[$version] . '. You might need to reindex your data.');
-    }
-
-    /**
-     * Returns the current running version.
-     *
-     * @return string
-     */
-    public function getCurrentVersion()
-    {
-        $currentVersion = false;
-        foreach (self::SUPPORTED_ES_FORMULAE as $version => $formula) {
-            if ($this->brew->isStartedService($formula)) {
-                $currentVersion = $version;
-            }
-        }
-
-        return $currentVersion;
     }
 }

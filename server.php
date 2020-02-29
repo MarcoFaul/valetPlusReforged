@@ -51,6 +51,7 @@ if (isset($valetConfig['rewrites'])) {
 $valetSitePath = apcu_fetch('valet_site_path' . $siteName);
 $domain = array_slice(explode('.', $siteName), -1)[0];
 
+
 if (!$valetSitePath) {
     foreach ($valetConfig['paths'] as $path) {
         if (is_dir($path . '/' . $siteName)) {
@@ -66,6 +67,10 @@ if (!$valetSitePath) {
 
     if (!$valetSitePath) {
         http_response_code(404);
+
+        // 404 variables
+        $requestedSite = htmlspecialchars($siteName . '.' . $valetConfig['domain']);
+        $requestedSiteName = htmlspecialchars($siteName);
         require __DIR__ . '/cli/templates/404.php';
         exit;
     }
