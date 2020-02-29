@@ -10,5 +10,8 @@ help:
 
 # --------------------------------------------------------------------------
 
-override: ## Execute locale valet file
-	sudo rm -rf ~/.composer/vendor/marcofaul/valet-plus-reforged/* && sudo cp -R ./ ~/.composer/vendor/marcofaul/valet-plus-reforged
+symlink: ## delete the global folder and symlink
+	sudo rm -rf ~/.composer/vendor/marcofaul/valet-plus-reforged/*
+	ln -s ${PWD}/* ${HOME}/.composer/vendor/marcofaul/valet-plus-reforged/
+
+

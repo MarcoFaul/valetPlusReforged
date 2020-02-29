@@ -21,13 +21,13 @@
     <nav class="navbar navbar-expand-lg navbar-light navbar-primary" id="navbar-primary">
         <div class="container">
             <a href="." class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal">
-                <img src="./assets/images/logo.svg" alt="Valet+ reforged" class="navbar-brand-logo navbar-brand-logo-large">
+                <img src="assets/images/logo.svg" alt="Valet+ reforged" class="navbar-brand-logo navbar-brand-logo-large">
             </a>
             <div class="navbar-collapse collapse">
                 <h6 class="navbar-heading">Navigation</h6>
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/" >
+                        <a class="nav-link" href="/">
                   <span class="nav-link-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
                   </span>
                             <span class="nav-link-title">Home</span>
@@ -54,11 +54,31 @@
                         </form>
                     </div>
                     <a href="#" class="btn btn-primary d-none-navbar-horizontal d-none-navbar-vertical-narrow btn-block" data-toggle="modal" data-target="#modal-customize">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
                         Customize
                     </a>
                     <a href="#" class="btn btn-primary d-none-navbar-horizontal d-none-navbar-vertical-wide btn-block btn-icon" data-toggle="modal" data-target="#modal-customize" aria-label="Button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
                     </a>
                 </div>
             </div>
@@ -67,7 +87,7 @@
     <nav class="navbar navbar-light navbar-secondary navbar-expand" id="navbar-secondary">
         <div class="container">
             <a href="." class="navbar-brand navbar-brand-autodark d-none-navbar-vertical">
-                <img src="./assets/images/logo.svg" alt="Valet+ reforged" class="navbar-brand-logo navbar-brand-logo-large">
+                <img src="assets/images/logo.svg" alt="Valet+ reforged" class="navbar-brand-logo navbar-brand-logo-large">
             </a>
         </div>
     </nav>
@@ -84,11 +104,17 @@
                     <!-- Page title actions -->
                     <div class="col-auto ml-auto d-print-none">
                         <a href="#" class="btn btn-primary ml-3 d-none d-sm-inline-block disabled" data-toggle="modal" data-target="#modal-report">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
                             Create new site
                         </a>
                         <a href="#" class="btn btn-primary ml-3 d-sm-none btn-icon" data-toggle="modal" data-target="#modal-report" aria-label="Create new report">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
                         </a>
                     </div>
                 </div>
@@ -104,28 +130,30 @@
                                 <thead>
                                 <tr>
                                     <th>Site name</th>
-<!--                                    <th>Visitors</th>-->
-<!--                                    <th>Unique</th>-->
-<!--                                    <th colspan="2">Bounce rate</th>-->
+                                                                        <th>SSL</th>
+                                    <!--                                    <th>Unique</th>-->
+                                    <!--                                    <th colspan="2">Bounce rate</th>-->
                                 </tr>
                                 </thead>
-                                    <?php foreach ($valetConfig['paths'] as $path): ?>
-                                        <?php foreach (glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR) as $site): ?>
-                                <tr>
-                                    <td>
+                                <?php foreach ($valetConfig['paths'] as $path): ?>
+                                    <?php foreach (glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR) as $site): ?>
+                                        <tr>
+                                            <td>
                                             <span>
                                                 <a target="_blank" href="http://<?php echo htmlspecialchars(basename($site) . '.' . $valetConfig['domain']); ?>"><?php echo htmlspecialchars(basename($site) . '.' . $valetConfig['domain']); ?></a>
                                             </span>
-                                    </td>
-<!--                                    <td class="text-muted">4,896</td>-->
-<!--                                    <td class="text-muted">3,654</td>-->
-<!--                                    <td class="text-muted">82.54%</td>-->
-<!--                                    <td class="text-right">-->
-<!--                                        <div class="chart-sparkline" id="sparkline-9"></div>-->
-<!--                                    </td>-->
-                                </tr>
-                                        <?php endforeach; ?>
+                                            </td>
+                                            <td class="text-muted">
+                                                <?php echo '<img src="assets/images/ssl.svg" alt="SSL" width="600" height="350"/>'; ?>
+                                            </td>
+                                            <!--                                    <td class="text-muted">3,654</td>-->
+                                            <!--                                    <td class="text-muted">82.54%</td>-->
+                                            <!--                                    <td class="text-right">-->
+                                            <!--                                        <div class="chart-sparkline" id="sparkline-9"></div>-->
+                                            <!--                                    </td>-->
+                                        </tr>
                                     <?php endforeach; ?>
+                                <?php endforeach; ?>
                             </table>
                         </div>
                     </div>
@@ -138,34 +166,34 @@
                         <div class="table-responsive">
                             <table class="table card-table table-vcenter">
                                 <?php foreach ($valetConfig['paths'] as $path): ?>
-                                <tr>
-                                    <td class="w-1 pr-0">
-                                        <label class="form-check m-0">
-                                            <span><?php echo htmlspecialchars($path); ?></span>
-                                        </label>
-                                    </td>
-<!--                                    <td class="w-100">-->
-<!--                                        <a href="#" class="text-reset">Extend the data model.</a>-->
-<!--                                    </td>-->
-<!--                                    <td class="text-nowrap text-muted">-->
-<!--                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>-->
-<!--                                        January 01, 2019-->
-<!--                                    </td>-->
-<!--                                    <td class="text-nowrap">-->
-<!--                                        <a href="#" class="text-muted">-->
-<!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><polyline points="20 6 9 17 4 12"></polyline></svg>-->
-<!--                                            2/7-->
-<!--                                        </a>-->
-<!--                                    </td>-->
-<!--                                    <td class="text-nowrap">-->
-<!--                                        <a href="#" class="text-muted">-->
-<!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>-->
-<!--                                            3</a>-->
-<!--                                    </td>-->
-<!--                                    <td>-->
-<!--                                        <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>-->
-<!--                                    </td>-->
-                                </tr>
+                                    <tr>
+                                        <td class="w-1 pr-0">
+                                            <label class="form-check m-0">
+                                                <span><?php echo htmlspecialchars($path); ?></span>
+                                            </label>
+                                        </td>
+                                        <!--                                    <td class="w-100">-->
+                                        <!--                                        <a href="#" class="text-reset">Extend the data model.</a>-->
+                                        <!--                                    </td>-->
+                                        <!--                                    <td class="text-nowrap text-muted">-->
+                                        <!--                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>-->
+                                        <!--                                        January 01, 2019-->
+                                        <!--                                    </td>-->
+                                        <!--                                    <td class="text-nowrap">-->
+                                        <!--                                        <a href="#" class="text-muted">-->
+                                        <!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><polyline points="20 6 9 17 4 12"></polyline></svg>-->
+                                        <!--                                            2/7-->
+                                        <!--                                        </a>-->
+                                        <!--                                    </td>-->
+                                        <!--                                    <td class="text-nowrap">-->
+                                        <!--                                        <a href="#" class="text-muted">-->
+                                        <!--                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>-->
+                                        <!--                                            3</a>-->
+                                        <!--                                    </td>-->
+                                        <!--                                    <td>-->
+                                        <!--                                        <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>-->
+                                        <!--                                    </td>-->
+                                    </tr>
                                 <?php endforeach; ?>
 
                             </table>
@@ -200,7 +228,10 @@
             <div class="modal-header">
                 <h5 class="modal-title">New report</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
@@ -249,7 +280,7 @@
                         https://domain
                       </span>
                                 </div>
-                                <input type="text" class="form-control pl-0"  value="report-01">
+                                <input type="text" class="form-control pl-0" value="report-01">
                             </div>
                         </div>
                     </div>
@@ -292,7 +323,10 @@
                     Cancel
                 </a>
                 <a href="#" class="btn btn-primary ml-auto" data-dismiss="modal">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
                     Create new report
                 </a>
             </div>
@@ -305,7 +339,10 @@
             <div class="modal-header">
                 <h5 class="modal-title">Customize Valet</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                 </button>
             </div>
             <div class="modal-body">
@@ -313,10 +350,26 @@
                     <label class="form-label">Color scheme</label>
                     <div class="form-hint">Light or dark presentation.</div>
                     <div class="btn-group w-100">
-                        <button class="btn btn-secondary" data-theme-toggle="theme:light"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                            Light</button>
-                        <button class="btn btn-secondary" data-theme-toggle="theme:dark"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                            Dark</button>
+                        <button class="btn btn-secondary" data-theme-toggle="theme:light">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                            Light
+                        </button>
+                        <button class="btn btn-secondary" data-theme-toggle="theme:dark">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                            Dark
+                        </button>
                     </div>
                 </div>
 
@@ -334,7 +387,7 @@
 </script>
 <!-- Core -->
 <script>
-    (function() {
+    (function () {
         var navbarPrimary = document.getElementById('navbar-primary');
         var defaults = {
             theme: 'light',
