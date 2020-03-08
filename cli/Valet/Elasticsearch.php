@@ -134,6 +134,10 @@ class Elasticsearch
             return;
         }
 
+        if ($version = null) {
+            return;
+        }
+
         if (array_key_exists($version, self::SUPPORTED_ES_FORMULAE) === false) {
             warning(sprintf('No assigned Elastic Version found for: "%s"', $version));
 
@@ -186,8 +190,6 @@ class Elasticsearch
         }
 
         if ($version = null) {
-            warning('No Elastic Version given');
-
             return;
         }
 

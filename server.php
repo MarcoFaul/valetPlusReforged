@@ -53,6 +53,8 @@ $domain = array_slice(explode('.', $siteName), -1)[0];
 
 
 if (!$valetSitePath) {
+    $siteCount = 0;
+    $valetPaths = count($valetConfig['paths']);
     foreach ($valetConfig['paths'] as $path) {
         if (is_dir($path . '/' . $siteName)) {
             $valetSitePath = $path . '/' . $siteName;
@@ -63,12 +65,31 @@ if (!$valetSitePath) {
             $valetSitePath = $path . '/' . $domain;
             break;
         }
+
+       $siteCount += count(glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR));
     }
 
     if (!$valetSitePath) {
         http_response_code(404);
 
         // 404 variables
+        $valetCustomConfig = $valetConfig;
+        unset($valetCustomConfig['domain']);
+        unset($valetCustomConfig['paths']);
+
+        $logo = __DIR__ . '/cli/templates/assets/images/logo.svg';
+        $ssl = __DIR__ . '/cli/templates/assets/images/ssl.svg';
+
+        $certificatePath = htmlspecialchars(VALET_HOME_PATH . '/Certificates/');
+        $certKey = '.crt';
+        $globalCertificates = glob($certificatePath . '*' . $certKey);
+        $certificates = [];
+        foreach ($globalCertificates as $certificate) {
+            $key = str_replace($certificatePath, '', $certificate);
+            $key = str_replace($certKey, '', $key);
+            $certificates[$key] = $certificate;
+        }
+
         $requestedSite = htmlspecialchars($siteName . '.' . $valetConfig['domain']);
         $requestedSiteName = htmlspecialchars($siteName);
         require __DIR__ . '/cli/templates/404.php';
