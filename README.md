@@ -1,10 +1,19 @@
 ## Introduction
 Go here for the [valet+ documentation](https://github.com/weprovide/valet-plus/wiki).
 
+![Dashboard](assets/images/example.png?raw=true "404 Dashboard")
+
+## Why should you use this Fork?
+- Fixed a lot of installation errors
+- Stable useage
+- Nice 404 Dashboard
+- Under maintenance
+
 ### Differences from Valet+
 
 Here are a few key differences compared to Valet+:
 
+- Add 404 Dashboard
 - Add PHP 7.3, 7.4 support
 - Add Ioncube for PHP 7.3 
 - Add Elasticsearch 6.8 support
@@ -22,6 +31,7 @@ Here are a few key differences compared to Valet+:
 - A lot more
 
 #### Coming soon…
+- Pipline tests
 - Ioncube for PHP 7.4 (https://forum.ioncube.com/viewtopic.php?t=4542&postdays=0&postorder=asc&start=15)
 - MySQL 8 support
 - default installation php 7.4
