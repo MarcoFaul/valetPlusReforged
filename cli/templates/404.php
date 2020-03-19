@@ -91,7 +91,7 @@
                     </div>
                     <?php foreach ($valetConfig['paths'] as $path): ?>
                         <?php foreach (glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR) as $site): ?>
-                            <div class="flex-grow flex px-6 py-6 text-gray-300er items-center border-b -mx-4">
+                            <div class="flex-grow flex px-6 py-3 text-gray-300er items-center border-b -mx-2">
                                 <div class="w-3/4 items-center">
                                     <span class="text-lg">
                                         <?php if(array_key_exists(basename($site) . '.' . $valetConfig['domain'],$certificates) === true) {?>
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <?php foreach ($valetConfig['paths'] as $path): ?>
-                        <div class="flex-grow flex px-6 py-6 text-gray-300er items-center border-b -mx-4">
+                        <div class="flex-grow flex px-6 py-3 text-gray-300er items-center border-b -mx-2">
                             <div class="w-dull items-center">
                                 <span class="text-lg"><?php echo htmlspecialchars($path); ?></span>
                             </div>

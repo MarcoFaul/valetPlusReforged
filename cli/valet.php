@@ -22,7 +22,7 @@ use Symfony\Component\Console\Question\Question;
 Container::setInstance(new Container);
 
 // get current version based on git describe and tags
-$version = new Version('1.6.0', __DIR__ . '/../');
+$version = new Version('1.6.1', __DIR__ . '/../');
 
 $app = new Application('Valet+ Reforged', $version->getVersion());
 
@@ -60,7 +60,11 @@ $app->command('install [--with-mariadb]', function ($withMariadb) {
     $domain = Nginx::install();
     PhpFpm::install();
     DnsMasq::install();
-    Mysql::install($withMariadb ? 'mariadb' : 'mysql@5.7');
+    if ($withMariadb) {
+        Mysql::install('mariadb');
+    } else {
+        Mysql::install();
+    }
     RedisTool::install();
     Mailhog::install();
     $nginx = Nginx::restart();
@@ -496,11 +500,12 @@ if (\is_dir(VALET_HOME_PATH)) {
     })->descriptions('Determine if this is the latest version of Valet');
 
     /**
-     * Switch between versions of PHP (Default) or Elasticsearch
+     * Switch between versions of PHP (Default), MySQL or Elasticsearch
      */
     $app->command('use [service] [targetVersion]', function ($service, $targetVersion) {
         $supportedServices = [
             'php'           => 'php',
+            'mysql'         =>'mysql',
             'elasticsearch' => 'elasticsearch',
             'es'            => 'elasticsearch',
         ];
@@ -516,6 +521,9 @@ if (\is_dir(VALET_HOME_PATH)) {
                 break;
             case 'elasticsearch':
                 Elasticsearch::switchTo($targetVersion);
+                break;
+            case 'mysql':
+                Mysql::switchTo($targetVersion);
                 break;
             default:
                 throw new Exception('Service to switch version of not supported. Supported services: ' . implode(', ', array_unique(array_values($supportedServices))));
