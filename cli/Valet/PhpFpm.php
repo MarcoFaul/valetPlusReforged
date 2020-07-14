@@ -13,6 +13,7 @@ class PhpFpm
     const PHP_V72_VERSION = '7.2';
     const PHP_V73_VERSION = '7.3';
     const PHP_V74_VERSION = '7.4';
+    const PHP_DEFAULT_VERSION = self::PHP_V74_VERSION;
 
     const SUPPORTED_PHP_FORMULAE = [
         self::PHP_V56_VERSION => self::PHP_FORMULA_NAME . self::PHP_V56_VERSION,
@@ -26,7 +27,8 @@ class PhpFpm
     const EOL_PHP_VERSIONS = [
         self::PHP_V56_VERSION,
         self::PHP_V70_VERSION,
-        self::PHP_V71_VERSION
+        self::PHP_V71_VERSION,
+        self::PHP_V72_VERSION
     ];
 
     const LOCAL_PHP_FOLDER = '/usr/local/etc/valet-php/';
@@ -66,7 +68,7 @@ class PhpFpm
     public function install(): void
     {
         if (!$this->hasInstalledPhp()) {
-            $this->brew->ensureInstalled($this->getFormulaName(self::PHP_V71_VERSION));
+            $this->brew->ensureInstalled($this->getFormulaName(self::PHP_DEFAULT_VERSION));
         }
 
         if (!$this->brew->hasTap(self::VALET_PHP_BREW_TAP)) {
@@ -508,20 +510,20 @@ class PhpFpm
             output($this->cli->runAsUser('brew uninstall php74'));
         }
 
-        // If the current php is not 7.2, link 7.2.
+        // set default php version
+        // If the current php is not the given default, link it.
         info('Installing and linking new PHP homebrew/core version.');
-        output($this->cli->runAsUser('brew uninstall ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION]));
-        output($this->cli->runAsUser('brew install ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION]));
-        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION]));
-        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_V72_VERSION] . ' --force --overwrite'));
+        output($this->cli->runAsUser('brew uninstall ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_DEFAULT_VERSION]));
+        output($this->cli->runAsUser('brew install ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_DEFAULT_VERSION]));
+        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_DEFAULT_VERSION]));
+        output($this->cli->runAsUser('brew link ' . self::SUPPORTED_PHP_FORMULAE[self::PHP_DEFAULT_VERSION] . ' --force --overwrite'));
 
         if ($this->brew->hasTap(self::DEPRECATED_PHP_TAP)) {
             info('[brew] untapping formulae ' . self::DEPRECATED_PHP_TAP);
             $this->brew->unTap(self::DEPRECATED_PHP_TAP);
         }
 
-        warning("Please check your linked php version, you might need to restart your terminal!" .
-            "\nLinked PHP should be php 7.2:");
+        warning(\sprintf("Please check your linked php version, you might need to restart your terminal! \nLinked PHP should be php %s:", self::PHP_DEFAULT_VERSION));
         output($this->cli->runAsUser('php -v'));
     }
 

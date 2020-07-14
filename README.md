@@ -28,7 +28,7 @@ If you have valet or valet+ installed. It is recommended to remove it first:
 8. Run the `valet install` command. Optionally add `--with-mariadb` to use MariaDB instead of MySQL This will configure and install Valet+ and DnsMasq, and register Valet's daemon to launch when your system starts.
 9. Once Valet+ is installed, try pinging (or just visit [http://foobar.test](http://foobar.test) any `*.test` domain on your terminal using a command such as `ping -c1 foobar.test`. If Valet+ is installed correctly you should see this domain responding on `127.0.0.1`. If not you might have to restart your system. Especially when coming from the Dinghy (docker) solution.
 
-> :info: If you get something like "Site can't be reached." Try to change the domain like so
+> :information_source: If you get something like "Site can't be reached." Try to change the domain like so
 > `valet domain host`
 
 ## Differences from Valet+

@@ -11,6 +11,7 @@ if (PHP_OS !== 'Darwin' && ! $inTestingEnvironment) {
     exit(1);
 }
 
+//@TODO: do we really need this check?
 if (PHP_VERSION_ID <= 70200) {
     echo 'Valet requires PHP 7.2 or later.';
 

@@ -53,6 +53,7 @@ class PeclCustom extends AbstractPecl
      */
     const EXTENSIONS = [
         self::IONCUBE_LOADER_EXTENSION => [
+            '7.4' => 'https://downloads.ioncube.com/loader_downloads/ioncube_loaders_dar_x86-64.tar.gz',
             '7.3' => 'https://downloads.ioncube.com/loader_downloads/ioncube_loaders_dar_x86-64.tar.gz',
             '7.2' => 'https://downloads.ioncube.com/loader_downloads/ioncube_loaders_dar_x86-64.tar.gz',
             '7.1' => 'https://downloads.ioncube.com/loader_downloads/ioncube_loaders_dar_x86-64.tar.gz',
@@ -139,7 +140,7 @@ class PeclCustom extends AbstractPecl
         $extensionDirectory = $this->getExtensionDirectory();
         $extensionAlias = $this->getExtensionAlias($extension);
 
-        if ($this->extensionIsMissing($extensionDirectory, $extensionAlias)) {
+        if ($this->extensionIsMissing($extensionDirectory)) {
             info("[PECL-CUSTOM] $extension is not available from PECL, downloading from: $url");
 
             $this->downloadExtension(

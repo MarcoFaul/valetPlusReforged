@@ -37,7 +37,7 @@ class Script
             $result = $this->cli->run($command);
 
             if($result !== '') {
-                warning(sprintf('%s port (%s) is already in use.', $service, $port));
+                info(sprintf('%s port (%s) is already in use.', $service, $port));
             }
         }
     }

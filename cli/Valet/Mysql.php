@@ -17,6 +17,13 @@ class Mysql
 
     const MYSQL_FORMULA_NAME = 'mysql@';
     const MYSQL_57_VERSION = '5.7';
+    const MARIA_DB = 'mariadb';
+    const MYSQL_80_VERSION = '8.0';
+    const SUPPORTED_MYSQL_FORMULAE = [
+        'mysql5.7' => self::MYSQL_FORMULA_NAME . self::MYSQL_57_VERSION,
+        'mysql8.0' => self::MYSQL_FORMULA_NAME . self::MYSQL_80_VERSION,
+        'mariadb' => self::MARIA_DB
+    ];
     const MYSQL_57_FORMULA = self::MYSQL_FORMULA_NAME . self::MYSQL_57_VERSION;
     const MYSQL_DEFAULT_FORMULA = self::MYSQL_57_FORMULA;
 
@@ -59,7 +66,7 @@ class Mysql
      *
      * @param $type
      */
-    public function install($type = 'mysql@5.7')
+    public function install($type = self::MYSQL_DEFAULT_FORMULA)
     {
         $this->verifyType($type);
         $currentlyInstalled = $this->installedVersion();
@@ -71,7 +78,7 @@ class Mysql
         $this->files->copy(__DIR__ . '/../stubs/limit.maxfiles.plist', static::MAX_FILES_CONF);
         $this->cli->quietly('launchctl load -w ' . static::MAX_FILES_CONF);
 
-        if (!$this->installedVersion()) {
+        if (!$currentlyInstalled) {
             $this->brew->installOrFail($type);
         }
 
@@ -88,6 +95,52 @@ class Mysql
     }
 
     /**
+     * Switch between versions of installed MySQL. Switch to the provided version.
+     *
+     * @param $version
+     *
+     * @return void
+     */
+    public function switchTo(string $version): void
+    {
+        $currentVersion = $this->installedVersion();
+
+        if (!\array_key_exists($version, self::SUPPORTED_MYSQL_FORMULAE)) {
+            throw new DomainException("This version of MySQL is not available. The following versions are available: " . implode(
+                ' ',
+                \array_keys(self::SUPPORTED_MYSQL_FORMULAE)
+            ));
+        }
+
+        // If the current version equals that of the current MySQL version, do not switch.
+        if ($version === $currentVersion) {
+            info('Already on this version');
+            return;
+        }
+
+        $installed = $this->brew->installed(self::SUPPORTED_MYSQL_FORMULAE[$version]);
+        if (!$installed) {
+            $this->brew->ensureInstalled(self::SUPPORTED_MYSQL_FORMULAE[$version]);
+        }
+
+        // Unlink the current PHP version.
+        if (!$this->unlinkMysql($currentVersion)) {
+            return;
+        }
+
+        $this->stop();
+        $this->install();
+
+
+        $shell = \preg_replace('/\s+/', '', $this->cli->runAsUser('echo $SHELL'));
+        $mysqlPath = \preg_replace('/\s+/', '', $this->cli->runAsUser('which mysql'));
+        $this->cli->runAsUser(\sprintf('export PATH="%s:$PATH" >> %s', $mysqlPath, $shell));
+        $this->cli->runAsUser('source ' . $shell);
+
+        info("Valet is now using " . self::SUPPORTED_MYSQL_FORMULAE[$version]);
+    }
+
+    /**
      * check if type is valid.
      *
      * @param $type
@@ -97,7 +150,7 @@ class Mysql
     public function verifyType($type)
     {
         if (!\in_array($type, $this->supportedVersions())) {
-            throw new DomainException('Invalid Mysql type given. Available: mysql@5.7/mariadb');
+            throw new DomainException('Invalid Mysql type given. Available: ' . \implode('/', self::SUPPORTED_MYSQL_FORMULAE));
         }
     }
 
@@ -108,7 +161,7 @@ class Mysql
      */
     public function supportedVersions()
     {
-        return ['mysql@5.7', 'mariadb'];
+        return self::SUPPORTED_MYSQL_FORMULAE;
     }
 
     /**
@@ -130,7 +183,7 @@ class Mysql
      *
      * @param string $type
      */
-    private function removeConfiguration($type = 'mysql@5.7')
+    private function removeConfiguration($type = self::MYSQL_DEFAULT_FORMULA)
     {
         $this->files->unlink(static::MYSQL_CONF);
         $this->files->unlink(static::MYSQL_CONF . '.default');
@@ -141,7 +194,7 @@ class Mysql
      */
     public function stop()
     {
-        $version = $this->installedVersion('mysql@5.7');
+        $version = $this->installedVersion(self::MYSQL_DEFAULT_FORMULA);
         info('[' . $version . '] Stopping');
 
         $this->cli->quietly('sudo brew services stop ' . $version);
@@ -153,7 +206,7 @@ class Mysql
      *
      * @param string $type
      */
-    public function installConfiguration($type = 'mysql@5.7')
+    public function installConfiguration($type = self::MYSQL_DEFAULT_FORMULA)
     {
         info('[' . $type . '] Configuring');
 
@@ -164,7 +217,7 @@ class Mysql
         }
 
         $contents = $this->files->get(__DIR__ . '/../stubs/my.cnf');
-        if ($type === 'mariadb') {
+        if ($type === self::MARIA_DB) {
             $contents = \str_replace('show_compatibility_56=ON', '', $contents);
         }
 
@@ -179,9 +232,33 @@ class Mysql
      */
     public function restart()
     {
-        $version = $this->installedVersion() ?: 'mysql@5.7';
+        $version = $this->installedVersion() ?: self::MYSQL_DEFAULT_FORMULA;
         info('[' . $version . '] Restarting');
         $this->cli->quietlyAsUser('brew services restart ' . $version);
+    }
+
+
+    /**
+     * Unlink a MySQL version, removing the binary symlink.
+     *
+     * @param $version
+     * @return bool
+     */
+    private function unlinkMySQL(string $version): bool
+    {
+        $isUnlinked = true;
+
+        info("[$version] Unlinking");
+        output($this->cli->runAsUser('brew unlink ' . $version, function () use (&$isUnlinked) {
+            $isUnlinked = false;
+        }));
+        if ($isUnlinked === false) {
+            warning("Could not unlink MySQL version!" . PHP_EOL .
+                "There appears to be an issue with your MySQL $version installation!" . PHP_EOL .
+                "See the output above for more information.");
+        }
+
+        return $isUnlinked;
     }
 
     /**
@@ -193,7 +270,7 @@ class Mysql
     {
         $alreadyRootPW = $this->cli->runAsUser('mysql -u root -proot -e"quit"');
 
-        if(strpos($alreadyRootPW, 'mysql: [Warning] Using a password on the command line interface can be insecure.') !== false) {
+        if (\strpos($alreadyRootPW, 'mysql: [Warning] Using a password on the command line interface can be insecure.') !== false) {
             info('[mysql] Password of root user is already set to root');
             return;
         }
