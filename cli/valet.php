@@ -15,6 +15,7 @@ use Illuminate\Container\Container;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use SebastianBergmann\Version;
 use Symfony\Component\Console\Question\Question;
+use Valet\Configuration;
 
 /**
  * Create the application.
@@ -22,9 +23,7 @@ use Symfony\Component\Console\Question\Question;
 Container::setInstance(new Container);
 
 // get current version based on git describe and tags
-$version = new Version('1.6.5', __DIR__ . '/../');
-
-$app = new Application('Valet+ Reforged', $version->getVersion());
+$app = new Application('Valet+ Reforged', version()->getVersion());
 
 /**
  * Prune missing directories and symbolic links on every command.

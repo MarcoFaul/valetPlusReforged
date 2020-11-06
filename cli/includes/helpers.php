@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Container\Container;
+use SebastianBergmann\Version;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -33,6 +34,18 @@ function info($output)
 function warning($output)
 {
     output('<fg=red>' . $output . '</>');
+}
+
+/**
+ * get current version based on git describe and tags
+ *
+ * @return Version
+ */
+function version(): Version
+{
+    $version = \trim(\file_get_contents(__DIR__ . '/../../version'));
+
+    return new Version($version, __DIR__ . '/../../');
 }
 
 /**
