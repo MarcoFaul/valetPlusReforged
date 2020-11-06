@@ -21,7 +21,7 @@ fi
 # If we are in the global Composer "bin" directory, we need to bump our
 # current directory up two, so that we will correctly proxy into the
 # Valet CLI script which is written in PHP. Will use PHP to do it.
-if [ ! -f "$DIR/cli/valet.php" ]
+if [ ! -f "$DIR/src/valet.php" ]
 then
     DIR=$(php -r "echo realpath('$DIR/../laravel/valet');")
 fi
@@ -38,7 +38,7 @@ fi
 if [[ "$1" = "share" ]]
 then
     HOST="${PWD##*/}"
-    DOMAIN=$(php "$DIR/cli/valet.php" domain)
+    DOMAIN=$(php "$DIR/src/valet.php" domain)
 
     for linkname in ~/.valet/Sites/*; do
         if [[ "$(readlink $linkname)" = "$PWD" ]]
@@ -48,7 +48,7 @@ then
     done
 
     # Fetch Ngrok URL In Background...
-    bash "$DIR/cli/scripts/fetch-share-url.sh" &
+    bash "$DIR/src/scripts/fetch-share-url.sh" &
     sudo -u $(logname) "$DIR/bin/ngrok" http "$HOST.$DOMAIN:80" -host-header=rewrite ${*:2}
     exit
 
@@ -56,5 +56,5 @@ then
 # and let it handle the request. These are commands which can be run
 # without sudo and don't require taking over terminals like Ngrok.
 else
-    php "$DIR/cli/valet.php" "$@"
+    php "$DIR/src/valet.php" "$@"
 fi

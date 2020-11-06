@@ -11,7 +11,8 @@ define('VALET_STATIC_PREFIX', '41c270e4-5535-4daa-b23e-c269744c2f45');
  * Load the Valet configuration.
  */
 $valetConfig = json_decode(
-    file_get_contents(VALET_HOME_PATH . '/config.json'), true
+    file_get_contents(VALET_HOME_PATH . '/config.json'),
+    true
 );
 
 /**
@@ -66,7 +67,7 @@ if (!$valetSitePath) {
             break;
         }
 
-       $siteCount += count(glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR));
+        $siteCount += count(glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR));
     }
 
     if (!$valetSitePath) {
@@ -77,8 +78,8 @@ if (!$valetSitePath) {
         unset($valetCustomConfig['domain']);
         unset($valetCustomConfig['paths']);
 
-        $logo = __DIR__ . '/cli/templates/assets/images/logo.svg';
-        $ssl = __DIR__ . '/cli/templates/assets/images/ssl.svg';
+        $logo = __DIR__ . '/src/templates/assets/images/logo.svg';
+        $ssl = __DIR__ . '/src/templates/assets/images/ssl.svg';
 
         $certificatePath = htmlspecialchars(VALET_HOME_PATH . '/Certificates/');
         $certKey = '.crt';
@@ -92,7 +93,7 @@ if (!$valetSitePath) {
 
         $requestedSite = htmlspecialchars($siteName . '.' . $valetConfig['domain']);
         $requestedSiteName = htmlspecialchars($siteName);
-        require __DIR__ . '/cli/templates/404.php';
+        require __DIR__ . '/src/templates/404.php';
         exit;
     }
 
@@ -106,7 +107,7 @@ if (!$valetSitePath) {
  */
 $valetDriver = null;
 
-require __DIR__ . '/cli/drivers/require.php';
+require __DIR__ . '/src/drivers/require.php';
 
 $valetDriver = ValetDriver::assign($valetSitePath, $siteName, $uri);
 
@@ -141,7 +142,9 @@ if ($uri !== '/' && !$isPhpFile && $staticFilePath = $valetDriver->isStaticFile(
  * Attempt to dispatch to a front controller.
  */
 $frontControllerPath = $valetDriver->frontControllerPath(
-    $valetSitePath, $siteName, $uri
+    $valetSitePath,
+    $siteName,
+    $uri
 );
 
 if (!$frontControllerPath) {
