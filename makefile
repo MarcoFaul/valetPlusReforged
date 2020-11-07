@@ -16,3 +16,6 @@ symlink: ## delete the global folder and symlink
 
 phpcs: ## run phpcs
 	composer run-script phpcs
+
+phpcbf: ## run phpcbf
+	composer run-script phpcbf

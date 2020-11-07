@@ -29,10 +29,11 @@
     "phpunit/phpunit": "~8.5.2",
     "squizlabs/php_codesniffer": "*",
     "escapestudios/symfony2-coding-standard": "*",
-    "phpcompatibility/php-compatibility": "^9.3"
+    "phpcompatibility/php-compatibility": "*"
   },
   "scripts": {
-    "phpcs": "vendor/bin/phpcs --standard=phpcs.xml --runtime-set testVersion 7.2",
+    "phpcs": "vendor/bin/phpcs --extensions=php/php",
+    "phpcbf": "vendor/bin/phpcbf --extensions=php/php",
     "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility,vendor/escapestudios/symfony2-coding-standard",
     "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility,vendor/escapestudios/symfony2-coding-standard"
   },

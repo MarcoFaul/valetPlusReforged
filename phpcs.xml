@@ -4,8 +4,28 @@
     <description>Valet-plus coding standard</description>
 
     <config name="installed_paths" value="vendor/phpcompatibility/php-compatibility" />
+    <config name="testVersion" value="7.2-"/>
     <!-- Path to best it ruleset. -->
     <rule ref="./vendor/escapestudios/symfony2-coding-standard/Symfony/ruleset.xml" />
+
+    <!-- additional rules -->
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array"
+                      value="dd=>null,var_dump=>null,dump=>null,exit=>null,die=>null,eval=>null,sizeof=>count,delete=>unset,print=>echo,is_null=>null,create_function=>null"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="ignoreNewlines" value="true" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.SpaceAfterComma" />
+    <rule ref="Squiz.Arrays.ArrayDeclaration.NoCommaAfterLast" />
 
     <!-- Path to directory which are checked. -->
     <file>src/</file>
