@@ -23,14 +23,14 @@ class PhpFpm
         self::PHP_V71_VERSION => self::PHP_FORMULA_NAME . self::PHP_V71_VERSION,
         self::PHP_V72_VERSION => self::PHP_FORMULA_NAME . self::PHP_V72_VERSION,
         self::PHP_V73_VERSION => self::PHP_FORMULA_NAME . self::PHP_V73_VERSION,
-        self::PHP_V74_VERSION => self::PHP_FORMULA_NAME . self::PHP_V74_VERSION
+        self::PHP_V74_VERSION => self::PHP_FORMULA_NAME . self::PHP_V74_VERSION,
     ];
 
     const EOL_PHP_VERSIONS = [
         self::PHP_V56_VERSION,
         self::PHP_V70_VERSION,
         self::PHP_V71_VERSION,
-        self::PHP_V72_VERSION
+        self::PHP_V72_VERSION,
     ];
 
     const LOCAL_PHP_FOLDER = '/usr/local/etc/valet-php/';
@@ -74,10 +74,10 @@ class PhpFpm
         }
 
         if (!$this->brew->hasTap(self::VALET_PHP_BREW_TAP)) {
-            info("[BREW TAP] Installing " . self::VALET_PHP_BREW_TAP);
+            info('[BREW TAP] Installing ' . self::VALET_PHP_BREW_TAP);
             $this->brew->tap(self::VALET_PHP_BREW_TAP);
         } else {
-            info("[BREW TAP] " . self::VALET_PHP_BREW_TAP . " already installed");
+            info('[BREW TAP] ' . self::VALET_PHP_BREW_TAP . ' already installed');
         }
 
         $version = $this->linkedPhp();
@@ -164,7 +164,7 @@ class PhpFpm
         $currentVersion = $this->linkedPhp();
 
         if (!array_key_exists($version, self::SUPPORTED_PHP_FORMULAE)) {
-            throw new DomainException("This version of PHP not available. The following versions are available: " . implode(
+            throw new DomainException('This version of PHP not available. The following versions are available: ' . implode(
                     ' ',
                     array_keys(self::SUPPORTED_PHP_FORMULAE)
                 ));
@@ -202,7 +202,7 @@ class PhpFpm
 
         $this->stop();
         $this->install();
-        info("Valet is now using " . self::SUPPORTED_PHP_FORMULAE[$version]);
+        info('Valet is now using ' . self::SUPPORTED_PHP_FORMULAE[$version]);
     }
 
     /**
@@ -334,7 +334,7 @@ class PhpFpm
     public function linkedPhp(): string
     {
         if (!$this->files->isLink('/usr/local/bin/php')) {
-            throw new DomainException("Unable to determine linked PHP.");
+            throw new DomainException('Unable to determine linked PHP.');
         }
 
         $resolvedPath = $this->files->readLink('/usr/local/bin/php');
@@ -347,7 +347,7 @@ class PhpFpm
             }
         }
 
-        throw new DomainException("Unable to determine linked PHP.");
+        throw new DomainException('Unable to determine linked PHP.');
     }
 
     /**
@@ -565,13 +565,13 @@ class PhpFpm
         output($output);
 
         if ($isLinked === false) {
-            warning("Could not link PHP version!" . PHP_EOL .
+            warning('Could not link PHP version!' . PHP_EOL .
                 "There appears to be an issue with your PHP $version installation!" . PHP_EOL .
-                "See the output above for more information." . PHP_EOL);
+                'See the output above for more information.' . PHP_EOL);
         }
 
         if ($currentVersion !== null && $isLinked === false) {
-            info("Linking back to previous version to prevent broken installation!");
+            info('Linking back to previous version to prevent broken installation!');
             $this->linkPhp($currentVersion);
         }
 
@@ -592,9 +592,9 @@ class PhpFpm
             $isUnlinked = false;
         }));
         if ($isUnlinked === false) {
-            warning("Could not unlink PHP version!" . PHP_EOL .
+            warning('Could not unlink PHP version!' . PHP_EOL .
                 "There appears to be an issue with your PHP $version installation!" . PHP_EOL .
-                "See the output above for more information.");
+                'See the output above for more information.');
         }
 
         return $isUnlinked;

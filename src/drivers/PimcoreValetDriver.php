@@ -33,7 +33,7 @@ class PimcoreValetDriver extends ValetDriver
         // remove cache busting part from url
         if (strpos($uri, '/cache-buster') === 0) {
             // https://stackoverflow.com/questions/25543974/how-to-get-string-after-second-slash-in-url-using-php
-            $last = explode("/", $uri, 3);
+            $last = explode('/', $uri, 3);
             $uri = '/' . $last[2];
         }
         if (file_exists($staticFilePath = $sitePath . '/var/assets' . $uri) || file_exists($staticFilePath = $sitePath . $uri)) {

@@ -49,7 +49,7 @@ class Pecl extends AbstractPecl
             '7.0' => '2.9.0',
             '5.6' => '2.2.7',
             'default' => false,
-            'extension_type' => self::ZEND_EXTENSION_TYPE
+            'extension_type' => self::ZEND_EXTENSION_TYPE,
         ],
         self::APCU_EXTENSION => [
             '7.4' => '5.1.18',
@@ -58,7 +58,7 @@ class Pecl extends AbstractPecl
             '7.1' => '5.1.17',
             '7.0' => '5.1.17',
             '5.6' => '4.0.11',
-            'extension_type' => self::NORMAL_EXTENSION_TYPE
+            'extension_type' => self::NORMAL_EXTENSION_TYPE,
         ],
         self::GEOIP_EXTENSION => [
             '7.4' => '1.1.1',
@@ -66,7 +66,7 @@ class Pecl extends AbstractPecl
             '7.2' => '1.1.1',
             '7.1' => '1.1.1',
             '7.0' => '1.1.1',
-            'extension_type' => self::NORMAL_EXTENSION_TYPE
+            'extension_type' => self::NORMAL_EXTENSION_TYPE,
         ],
         self::MEMCACHE_EXTENSION => [
             '7.4' => '3.1.5',
@@ -75,11 +75,11 @@ class Pecl extends AbstractPecl
             '7.1' => '3.1.3',
             '7.0' => '3.1.3',
             'default' => false,
-            'extension_type' => self::NORMAL_EXTENSION_TYPE
+            'extension_type' => self::NORMAL_EXTENSION_TYPE,
         ],
         self::YAML_EXTENSION => [
             '5.6' => '1.3.1',
-            'extension_type' => self::NORMAL_EXTENSION_TYPE
+            'extension_type' => self::NORMAL_EXTENSION_TYPE,
         ]
     ];
 
@@ -99,7 +99,7 @@ class Pecl extends AbstractPecl
      */
     public function installExtensions(bool $onlyDefaults = true): void
     {
-        info("[PECL] Installing extensions");
+        info('[PECL] Installing extensions');
         foreach (self::EXTENSIONS as $extension => $versions) {
             if ($onlyDefaults && $this->isDefaultExtension($extension) === false) {
                 continue;
@@ -151,7 +151,7 @@ class Pecl extends AbstractPecl
             throw new DomainException("Could not find installation path for: $extension\n\n$result");
         }
 
-        if (strpos($result, "Error:")) {
+        if (strpos($result, 'Error:')) {
             throw new DomainException("Installation path found, but installation failed:\n\n$result");
         }
 
@@ -205,7 +205,7 @@ class Pecl extends AbstractPecl
      */
     public function uninstallExtensions(): void
     {
-        info("[PECL] Removing extensions");
+        info('[PECL] Removing extensions');
         foreach (self::EXTENSIONS as $extension => $versions) {
             if ($this->getVersion($extension) !== false) {
                 $this->disableExtension($extension);

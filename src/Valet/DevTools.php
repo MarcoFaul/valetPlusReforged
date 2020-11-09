@@ -18,7 +18,7 @@ class DevTools
         self::WP_CLI_TOOL,
         self::PV_TOOL,
         self::GEOIP_TOOL,
-        self::ZLIB_TOOL
+        self::ZLIB_TOOL,
     ];
 
     public $brew;

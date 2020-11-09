@@ -506,7 +506,7 @@ class Site
 
             // Remove from /etc/hosts file
             $hosts = $this->files->get(self::ETC_HOSTS_PATH);
-            $hosts = str_replace("\n127.0.0.1  www.$url  $url", "", $hosts);
+            $hosts = str_replace("\n127.0.0.1  www.$url  $url", '', $hosts);
             $this->files->put(self::ETC_HOSTS_PATH, $hosts);
 
             return $url;

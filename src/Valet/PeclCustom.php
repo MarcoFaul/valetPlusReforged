@@ -63,8 +63,8 @@ class PeclCustom extends AbstractPecl
             'packaged_directory' => 'ioncube',
             'default' => false,
             'extension_type' => self::ZEND_EXTENSION_TYPE,
-            'extension_php_name' => 'the ionCube PHP Loader'
-        ]
+            'extension_php_name' => 'the ionCube PHP Loader',
+        ],
     ];
 
     /**
@@ -80,7 +80,7 @@ class PeclCustom extends AbstractPecl
      */
     public function installExtensions(bool $onlyDefaults = true): void
     {
-        info("[PECL-CUSTOM] Installing extensions");
+        info('[PECL-CUSTOM] Installing extensions');
         foreach (self::EXTENSIONS as $extension => $versions) {
             if ($onlyDefaults && $this->isDefaultExtension($extension) === false) {
                 continue;
@@ -177,14 +177,14 @@ class PeclCustom extends AbstractPecl
         $unpackagedDirectory = $this->getPackagedDirectory($extension);
 
         // Download and unzip
-        $this->cli->passthru("cd /tmp && sudo -u " . user() . " curl -O $url");
+        $this->cli->passthru('cd /tmp && sudo -u ' . user() . " curl -O $url");
 
         // Unpackage the file using file extension.
         $fileExtension = $this->getFileExtension($extension);
         switch ($fileExtension) {
             case self::TAR_GZ_FILE_EXTENSION:
                 info('[PECL-CUSTOM] Unpackaging .tar.gz:');
-                $this->cli->passthru("cd /tmp && sudo -u " . user() . " tar -xvzf $fileName");
+                $this->cli->passthru('cd /tmp && sudo -u ' . user() . " tar -xvzf $fileName");
                 break;
             default:
                 throw new DomainException("File extension $fileExtension is not supported yet!");
@@ -218,7 +218,7 @@ class PeclCustom extends AbstractPecl
             output("\t$extension is missing, ");
 
             if ($this->isEnabled($extension)) {
-                output("disabling...");
+                output('disabling...');
 
                 $this->disable($extension);
             }
@@ -260,7 +260,7 @@ class PeclCustom extends AbstractPecl
      */
     public function uninstallExtensions(): void
     {
-        info("[PECL-CUSTOM] Removing extensions");
+        info('[PECL-CUSTOM] Removing extensions');
         foreach (self::EXTENSIONS as $extension => $versions) {
             $this->uninstallExtension($extension);
         }
@@ -489,7 +489,7 @@ class PeclCustom extends AbstractPecl
         $extensionDirectory = $this->getExtensionDirectory();
         $extensionAlias = $this->getExtensionAlias($extension);
 
-        $path = sprintf("%s/%s", $extensionDirectory, $extensionAlias);
+        $path = sprintf('%s/%s', $extensionDirectory, $extensionAlias);
 
         return $this->files->exists($path) === false;
     }

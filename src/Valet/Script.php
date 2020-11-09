@@ -4,10 +4,10 @@ namespace Valet;
 
 class Script
 {
-    const PORTS = array(
+    const PORTS = [
         'NGINX' => 443,
-        'MYSQL' => 3306
-    );
+        'MYSQL' => 3306,
+    ];
 
     public $cli;
     public $files;

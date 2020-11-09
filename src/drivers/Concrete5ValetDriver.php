@@ -13,7 +13,7 @@ class Concrete5ValetDriver extends BasicValetDriver
      */
     public function serves($sitePath, $siteName, $uri)
     {
-        return file_exists($sitePath . "/concrete/config/install/base");
+        return file_exists($sitePath . '/concrete/config/install/base');
     }
 
     /**

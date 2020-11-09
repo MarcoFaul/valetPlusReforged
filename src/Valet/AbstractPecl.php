@@ -26,9 +26,7 @@ abstract class AbstractPecl
      *
      * @formatter:on
      **/
-    const EXTENSIONS = [
-
-    ];
+    const EXTENSIONS = [];
 
     public $cli;
     public $files;

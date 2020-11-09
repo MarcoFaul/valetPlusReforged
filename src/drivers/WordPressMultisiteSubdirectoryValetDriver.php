@@ -2,7 +2,7 @@
 
 class WordPressMultisiteSubdirectoryValetDriver extends BasicValetDriver
 {
-    public $wp_root = false; // "wp"
+    public $wpRoot = false;
 
     /**
      * Determine if the driver serves the request.
@@ -45,17 +45,17 @@ class WordPressMultisiteSubdirectoryValetDriver extends BasicValetDriver
                 $uri = substr($uri, stripos($uri, '/wp-'));
             }
 
-            if ($this->wp_root !== false && file_exists($sitePath . "/{$this->wp_root}/wp-admin")) {
-                $uri = "/{$this->wp_root}" . $uri;
+            if ($this->wpRoot !== false && file_exists($sitePath . "/{$this->wpRoot}/wp-admin")) {
+                $uri = "/{$this->wpRoot}" . $uri;
             }
         }
 
         // Handle wp-cron.php properly
         if (stripos($uri, 'wp-cron.php') !== false) {
-            $new_uri = substr($uri, stripos($uri, '/wp-'));
+            $newURI = substr($uri, stripos($uri, '/wp-'));
 
-            if (file_exists($sitePath . $new_uri)) {
-                return $sitePath . $new_uri;
+            if (file_exists($sitePath . $newURI)) {
+                return $sitePath . $newURI;
             }
         }
 
@@ -71,14 +71,14 @@ class WordPressMultisiteSubdirectoryValetDriver extends BasicValetDriver
         // If the URI contains one of the main WordPress directories and it doesn't end with a slash,
         // drop the subdirectory from the URI and check if the file exists. If it does, return the new uri.
         if (stripos($uri, 'wp-admin') !== false || stripos($uri, 'wp-content') !== false || stripos($uri, 'wp-includes') !== false) {
-            if (substr($uri, -1, 1) == "/") {
+            if (substr($uri, -1, 1) == '/') {
                 return false;
             }
 
             $new_uri = substr($uri, stripos($uri, '/wp-'));
 
-            if ($this->wp_root !== false && file_exists($sitePath . "/{$this->wp_root}/wp-admin")) {
-                $new_uri = "/{$this->wp_root}" . $new_uri;
+            if ($this->wpRoot !== false && file_exists($sitePath . "/{$this->wpRoot}/wp-admin")) {
+                $new_uri = "/{$this->wpRoot}" . $new_uri;
             }
 
             if (file_exists($sitePath . $new_uri)) {

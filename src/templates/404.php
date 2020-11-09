@@ -163,7 +163,7 @@
         <div class="container mx-auto px-4">
             <div class="md:flex justify-between items-center text-sm">
                 <div class="relative w-full md:flex md:flex-row-reverse items-center py-4">
-                    <div class="text-gray-600 absolute right-0 text-center md:mr-4">Copyright &copy; <?php echo date("Y"); ?> Valet+ reforged. All rights reserved.</div>
+                    <div class="text-gray-600 absolute right-0 text-center md:mr-4">Copyright &copy; <?php echo date('Y'); ?> Valet+ reforged. All rights reserved.</div>
                 </div>
             </div>
         </div>

@@ -127,7 +127,7 @@ class Mysql
         $currentVersion = $this->installedVersion();
 
         if (!array_key_exists($version, self::SUPPORTED_MYSQL_FORMULAE)) {
-            throw new DomainException("This version of MySQL is not available. The following versions are available: " . implode(
+            throw new DomainException('This version of MySQL is not available. The following versions are available: ' . implode(
                     ' ',
                     array_keys(self::SUPPORTED_MYSQL_FORMULAE)
                 ));
@@ -159,7 +159,7 @@ class Mysql
         $this->cli->runAsUser(sprintf('export PATH="%s:$PATH" >> %s', $mysqlPath, $shell));
         $this->cli->runAsUser('source ' . $shell);
 
-        info("Valet is now using " . self::SUPPORTED_MYSQL_FORMULAE[$version]);
+        info('Valet is now using ' . self::SUPPORTED_MYSQL_FORMULAE[$version]);
     }
 
     /**
@@ -275,9 +275,9 @@ class Mysql
             $isUnlinked = false;
         }));
         if ($isUnlinked === false) {
-            warning("Could not unlink MySQL version!" . PHP_EOL .
+            warning('Could not unlink MySQL version!' . PHP_EOL .
                 "There appears to be an issue with your MySQL $version installation!" . PHP_EOL .
-                "See the output above for more information.");
+                'See the output above for more information.');
         }
 
         return $isUnlinked;

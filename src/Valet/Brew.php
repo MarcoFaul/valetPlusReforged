@@ -255,7 +255,7 @@ class Brew
      */
     public function isStartedService(string $formula): bool
     {
-        $info = explode(" ", trim(str_replace($formula, "", $this->cli->runAsUser('brew services list | grep ' . $formula))));
+        $info = explode(' ', trim(str_replace($formula, '', $this->cli->runAsUser('brew services list | grep ' . $formula))));
         $state = array_shift($info);
 
         return ($state === 'started');

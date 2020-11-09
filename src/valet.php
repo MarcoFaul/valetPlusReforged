@@ -129,7 +129,7 @@ if (is_dir(VALET_HOME_PATH)) {
     $app->command('park [path]', function ($path = null) {
         Configuration::addPath($path ?: getcwd());
 
-        info(($path === null ? "This" : "The [{$path}]") . " directory has been added to Valet's paths.");
+        info(($path === null ? 'This' : "The [{$path}]") . " directory has been added to Valet's paths.");
     })->descriptions('Register the current working (or specified) directory with Valet');
 
     /**
@@ -138,7 +138,7 @@ if (is_dir(VALET_HOME_PATH)) {
     $app->command('forget [path]', function ($path = null) {
         Configuration::removePath($path ?: getcwd());
 
-        info(($path === null ? "This" : "The [{$path}]") . " directory has been removed from Valet's paths.");
+        info(($path === null ? 'This' : "The [{$path}]") . " directory has been removed from Valet's paths.");
     })->descriptions('Remove the current working (or specified) directory from Valet\'s list of paths');
 
     /**
@@ -281,16 +281,16 @@ if (is_dir(VALET_HOME_PATH)) {
      * Open the current or given directory in the browser.
      */
     $app->command('open [domain]', function ($domain = null) {
-        $url = "http://" . ($domain ?: Site::host(getcwd())) . '.' . Configuration::read()['domain'];
+        $url = 'http://' . ($domain ?: Site::host(getcwd())) . '.' . Configuration::read()['domain'];
 
-        passthru("sudo -u " . user() . " open " . escapeshellarg($url));
+        passthru('sudo -u ' . user() . ' open ' . escapeshellarg($url));
     })->descriptions('Open the site for the current (or specified) directory in your browser');
 
     /**
      * Generate a publicly accessible URL for your project.
      */
     $app->command('share', function () {
-        warning("It looks like you are running `src/valet.php` directly, please use the `valet` script in the project root instead.");
+        warning('It looks like you are running `src/valet.php` directly, please use the `valet` script in the project root instead.');
     })->descriptions('Generate a publicly accessible URL for your project');
 
     /**
@@ -708,19 +708,19 @@ if (is_dir(VALET_HOME_PATH)) {
         }
 
         if (Pecl::isEnabled('xdebug') === false && ($mode === 'on' || $mode === 'enable')) {
-            info("[PECL] Enabling xdebug extension");
+            info('[PECL] Enabling xdebug extension');
             $restart = true;
             Pecl::enable('xdebug');
         } elseif ($mode === 'on' || $mode === 'enable') {
-            info("[PECL] Xdebug extension is already enabled!");
+            info('[PECL] Xdebug extension is already enabled!');
         }
 
         if (Pecl::isEnabled('xdebug') === true && ($mode === 'off' || $mode === 'disable')) {
-            info("[PECL] Disabling xdebug extension");
+            info('[PECL] Disabling xdebug extension');
             $restart = true;
             Pecl::disable('xdebug');
         } elseif ($mode === 'off' || $mode === 'disable') {
-            info("[PECL] Xdebug extension is already uninstalled!");
+            info('[PECL] Xdebug extension is already uninstalled!');
         }
 
         if ($restart) {
@@ -741,19 +741,19 @@ if (is_dir(VALET_HOME_PATH)) {
         }
 
         if (PeclCustom::isEnabled('ioncube_loader_dar') === false && ($mode === 'on' || $mode === 'enable')) {
-            info("[PECL-CUSTOM] Enabling ioncube_loader_dar extension");
+            info('[PECL-CUSTOM] Enabling ioncube_loader_dar extension');
             PeclCustom::enableExtension('ioncube_loader_dar');
             PhpFpm::restart();
         } elseif ($mode === 'on' || $mode === 'enable') {
-            info("[PECL-CUSTOM] ioncube_loader_dar extension is already installed");
+            info('[PECL-CUSTOM] ioncube_loader_dar extension is already installed');
         }
 
         if (PeclCustom::isEnabled('ioncube_loader_dar') === true && ($mode === 'off' || $mode === 'disable')) {
-            info("[PECL-CUSTOM] Disabling ioncube_loader_dar extension");
+            info('[PECL-CUSTOM] Disabling ioncube_loader_dar extension');
             PeclCustom::disable('ioncube_loader_dar');
             PhpFpm::restart();
         } elseif ($mode === 'off' || $mode === 'disable') {
-            info("[PECL-CUSTOM] ioncube_loader_dar extension is already uninstalled");
+            info('[PECL-CUSTOM] ioncube_loader_dar extension is already uninstalled');
         }
     })->descriptions('Enable / disable ioncube');
 
@@ -1030,7 +1030,7 @@ if (is_dir(VALET_HOME_PATH)) {
 
         info('Sudoers entries have been added for Brew and Valet.');
     })->descriptions('Add sudoers files for Brew and Valet to make Valet commands run without passwords', [
-        '--off' => 'Remove the sudoers files so normal sudo password prompts are required.'
+        '--off' => 'Remove the sudoers files so normal sudo password prompts are required.',
     ]);
 }
 

@@ -69,7 +69,7 @@ class Typo3ValetDriver extends ValetDriver
         // If that is the case, the file cannot be found on disk, so remove the version
         // identifier before retrying below.
         if (!$this->isActualFile($filePath = $sitePath . $this->documentRoot . $uri)) {
-            $uri = preg_replace("@^(.+)\.(\d+)\.(js|css|png|jpg|gif|gzip)$@", "$1.$3", $uri);
+            $uri = preg_replace('@^(.+)\.(\d+)\.(js|css|png|jpg|gif|gzip)$@', '$1.$3', $uri);
         }
 
         // Now that any possible version string is cleared from the filename, the resulting
