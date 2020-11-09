@@ -1,33 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="VALET-PLUS RULESET" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-    <description>Valet-plus coding standard</description>
+    <description>Valet-plus-reforged coding standard</description>
 
-    <config name="installed_paths" value="vendor/phpcompatibility/php-compatibility" />
+    <config name="installed_paths" value="vendor/phpcompatibility/php-compatibility"/>
     <config name="testVersion" value="7.2-"/>
-    <!-- Path to best it ruleset. -->
-    <rule ref="./vendor/escapestudios/symfony2-coding-standard/Symfony/ruleset.xml" />
 
-    <!-- additional rules -->
-    <rule ref="Generic.PHP.ForbiddenFunctions">
-        <properties>
-            <property name="forbiddenFunctions" type="array"
-                      value="dd=>null,var_dump=>null,dump=>null,exit=>null,die=>null,eval=>null,sizeof=>count,delete=>unset,print=>echo,is_null=>null,create_function=>null"/>
-        </properties>
-    </rule>
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
-    <rule ref="Squiz.Strings.ConcatenationSpacing">
-        <properties>
-            <property name="spacing" value="1" />
-            <property name="ignoreNewlines" value="true" />
-        </properties>
-    </rule>
-    <rule ref="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-    <rule ref="Squiz.Arrays.ArrayDeclaration.SpaceAfterComma" />
-    <rule ref="Squiz.Arrays.ArrayDeclaration.NoCommaAfterLast" />
+    <arg name="basepath" value="."/>
+    <arg name="colors" />
+    <arg value="snp" />
 
     <!-- Path to directory which are checked. -->
     <file>src/</file>
     <file>tests/</file>
+
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array"
+                      value="dd=>null,var_dump=>null,dump=>null,eval=>null,sizeof=>count,delete=>unset,print=>echo,create_function=>null"/>
+        </properties>
+    </rule>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1"/>
+            <property name="ignoreNewlines" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequire"/>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration.NoCommaAfterLast"/>
+    <rule ref="Squiz.Arrays.ArrayDeclaration">
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.KeyNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.DoubleArrowNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.CloseBraceNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNoNewline" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.MultiLineNotAllowed" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.SingleLineNotAllowed" />
+    </rule>
+    <rule ref="Squiz.NamingConventions.ValidVariableName">
+        <exclude name="Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore" />
+        <exclude name="Squiz.NamingConventions.ValidVariableName.NotCamelCaps" />
+    </rule>
+
+    <rule ref="PSR1">
+        <exclude name="PSR1.Classes.ClassDeclaration"/>
+    </rule>
 </ruleset>
