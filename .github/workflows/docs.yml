@@ -14,10 +14,6 @@ jobs:
           pre-build-command: "apt-get update -y && pip3 install sphinx sphinx_rtd_theme sphinx_copybutton recommonmark sphinx_markdown_tables --user"
           docs-folder: "docs/"
 
-      - name: Install and Build 🔧
-        run: |
-          ls -lah
-
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
