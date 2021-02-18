@@ -22,7 +22,8 @@
     "symfony/process": "~5.2.3",
     "nategood/httpful": "~0.3.2",
     "tightenco/collect": "~8.19.0",
-    "sebastian/version": "^2.0.1"
+    "sebastian/version": "^2.0.1",
+    "twig/twig": "^3.3"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "*",

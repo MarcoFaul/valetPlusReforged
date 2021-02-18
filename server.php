@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-/**
- * Define the user's "~/.valet" path.
- */
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
-define('VALET_HOME_PATH', posix_getpwuid(posix_geteuid())['dir'] . '/.valet');
-define('VALET_STATIC_PREFIX', '41c270e4-5535-4daa-b23e-c269744c2f45');
+require __DIR__ . '/vendor/autoload.php';
+$loader = new FilesystemLoader(__DIR__ . '/src/templates');
+$twig = new Environment($loader);
+
 
 /**
  * Load the Valet configuration.
@@ -75,11 +76,10 @@ if (!$valetSitePath) {
 
         // 404 variables
         $valetCustomConfig = $valetConfig;
+
         unset($valetCustomConfig['domain']);
         unset($valetCustomConfig['paths']);
 
-        $logo = __DIR__ . '/src/templates/assets/images/logo.svg';
-        $ssl = __DIR__ . '/src/templates/assets/images/ssl.svg';
 
         $certificatePath = htmlspecialchars(VALET_HOME_PATH . '/Certificates/');
         $certKey = '.crt';
@@ -93,7 +93,36 @@ if (!$valetSitePath) {
 
         $requestedSite = htmlspecialchars($siteName . '.' . $valetConfig['domain']);
         $requestedSiteName = htmlspecialchars($siteName);
-        require __DIR__ . '/src/templates/404.php';
+
+        $paths = [];
+
+        foreach ($valetConfig['paths'] as $path) {
+            $sites = glob(htmlspecialchars($path) . '/*', GLOB_ONLYDIR);
+            foreach ($sites as $site) {
+
+
+                $domain = \sprintf('%s.%s', basename($site), $valetConfig['domain']);
+                $enabled = array_key_exists($domain, $certificates);
+                if ($enabled) {
+
+                    $fullDomain = \sprintf('https://%s', $domain);
+                } else {
+                    $fullDomain = \sprintf('http://%s', $domain);
+                }
+                $paths[$fullDomain] = $enabled;
+            }
+        }
+
+        echo $twig->render('404.html.twig', [
+            'requestedSite' => $requestedSite,
+            'valetConfig' => $valetConfig,
+            'valetCustomConfig' => $valetCustomConfig,
+            'siteCount' => $siteCount,
+            'paths' => $paths,
+            'valetPaths' => $valetPaths,
+            'phpversion' => phpversion(),
+            'mailhogDomain' => \sprintf('http://mailhog.%s', $valetConfig['domain']),
+        ]);
         exit;
     }
 
