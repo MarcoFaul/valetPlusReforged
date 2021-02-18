@@ -17,9 +17,9 @@
   },
   "require": {
     "php": ">=7.2",
-    "illuminate/container": "~7.30.1",
+    "illuminate/container": "~7.30.4",
     "mnapoli/silly": "~1.7.2",
-    "symfony/process": "~5.2.1",
+    "symfony/process": "~5.2.3",
     "nategood/httpful": "~0.3.2",
     "tightenco/collect": "~8.19.0",
     "sebastian/version": "^2.0.1"
