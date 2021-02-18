@@ -18,7 +18,8 @@ if (PHP_VERSION_ID <= 70200) {
     exit(1);
 }
 
-if (exec('which brew') == '' && !$inTestingEnvironment) {
+
+if (array_key_exists('SHELL', $_SERVER) && exec('which brew') == '' && !$inTestingEnvironment) {
     echo 'Valet requires Homebrew to be installed on your Mac.';
 
     exit(1);
