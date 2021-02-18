@@ -137,7 +137,7 @@
         <div class="bg-white border-t border-b sm:border-l sm:border-r sm:rounded shadow mb-6">
             <div class="px-6 py-4 border-b">
                 <div class="text-center text-grey">
-                    Additional configuration
+                    Configuration
                 </div>
             </div>
             <div class="flex">
@@ -145,12 +145,12 @@
                 <?php foreach ($valetCustomConfig as $name => $config) : ?>
                     <div class="w-1/3 text-center py-4">
                         <div class="border-r">
-                            <div class="text-sm uppercase text-grey tracking-wide">
-                                <?php echo $name ?>
+                            <div class="text-sm text-ul uppercase text-grey tracking-wide">
+                                <u><?php echo $name ?></u>
                             </div>
                             <div class="text-gray-300er">
                                 <?php foreach ($config as $enabled => $value) : ?>
-                                    <span class="text-5xl"><?php echo $enabled ?>: <b><?php echo (int)$value ?></b> </span>
+                                    <span class="text-1xl"><?php echo $enabled ?>: <b><?php echo (int)$value ?></b> </span><br/>
                                 <?php endforeach; ?>
                             </div>
                         </div>
