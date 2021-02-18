@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /** Valet driver for Pimcore 5 */
 class PimcoreValetDriver extends ValetDriver

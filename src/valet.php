@@ -1,5 +1,5 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Load correct autoloader depending on install location.
@@ -14,7 +14,6 @@ use Illuminate\Container\Container;
 use Silly\Application;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Valet\Configuration;
 
 /**
  * Create the application.

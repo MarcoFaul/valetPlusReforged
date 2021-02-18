@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * This driver serves TYPO3 instances (version 7.0 and up). It activates, if it
