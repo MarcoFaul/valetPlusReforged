@@ -493,11 +493,11 @@ if (is_dir(VALET_HOME_PATH)) {
     /**
      * Determine if this is the latest release of Valet.
      */
-    $app->command('on-latest-version', function () use ($version) {
-        if (Valet::onLatestVersion($version)) {
-            output('YES');
+    $app->command('on-latest-version', function () {
+        if (Valet::onLatestVersion(version()->getVersion())) {
+            success('Yes');
         } else {
-            output('NO');
+            warning('No');
         }
     })->descriptions('Determine if this is the latest version of Valet');
 
@@ -515,7 +515,7 @@ if (is_dir(VALET_HOME_PATH)) {
             $targetVersion = $service;
             $service = 'php';
         }
-        $service = (isset($supportedServices[$service]) ? $supportedServices[$service] : false);
+        $service = ($supportedServices[$service] ?? false);
 
         switch ($service) {
             case 'php':
@@ -538,6 +538,11 @@ if (is_dir(VALET_HOME_PATH)) {
     $app->command('db [run] [name] [optional] [-y|--yes]', function ($input, $output, $run, $name, $optional) {
         $helper = $this->getHelperSet()->get('question');
         $defaults = $input->getOptions();
+
+        if ((string)$run === '') {
+            error('Available commands: list/ls, create, drop, reset, open, import, reimport, export/dump');
+            return;
+        }
 
         if ($run === 'list' || $run === 'ls') {
             Mysql::listDatabases();
@@ -569,7 +574,8 @@ if (is_dir(VALET_HOME_PATH)) {
             $databaseName = Mysql::dropDatabase($name);
 
             if (!$databaseName) {
-                return warning('Error dropping database');
+                warning('Error dropping database');
+                return;
             }
 
             info('Database "' . $databaseName . '" dropped successfully');
@@ -590,13 +596,15 @@ if (is_dir(VALET_HOME_PATH)) {
             $dropped = Mysql::dropDatabase($name);
 
             if (!$dropped) {
-                return warning('Error creating database');
+                warning('Error creating database');
+                return;
             }
 
             $databaseName = Mysql::createDatabase($name);
 
             if (!$databaseName) {
-                return warning('Error creating database');
+                warning('Error creating database');
+                return;
             }
 
             info('Database "' . $databaseName . '" reset successfully');
@@ -764,7 +772,7 @@ if (is_dir(VALET_HOME_PATH)) {
         }
 
         throw new Exception('Sub-command not found. Available: install');
-    })->descriptions('Enable / disable Elasticsearch');
+    })->descriptions('Install Elasticsearch');
 
     $app->command('rabbitmq [mode]', function ($mode) {
         $modes = ['install', 'on', 'enable', 'off', 'disable'];
@@ -819,7 +827,7 @@ if (is_dir(VALET_HOME_PATH)) {
     $app->command('mailhog [mode]', function ($mode) {
         $modes = ['install', 'on', 'enable', 'off', 'disable'];
 
-        if (!in_array($mode, $modes)) {
+        if (!in_array($mode, $modes, true)) {
             throw new Exception('Mode not found. Available modes: ' . implode(', ', $modes));
         }
 
@@ -844,7 +852,7 @@ if (is_dir(VALET_HOME_PATH)) {
     $app->command('redis [mode]', function ($mode) {
         $modes = ['install', 'on', 'enable', 'off', 'disable'];
 
-        if (!in_array($mode, $modes)) {
+        if (!in_array($mode, $modes, true)) {
             throw new Exception('Mode not found. Available modes: ' . implode(', ', $modes));
         }
 

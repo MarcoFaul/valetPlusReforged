@@ -128,13 +128,8 @@ class Brew
             $this->tap($taps);
         }
 
-        $this->cli->runAsUser(
-            trim('brew install ' . $formula . ' ' . implode(' ', $options)),
-            function ($exitCode, $errorOutput) use ($formula) {
-                output($errorOutput);
-
-                throw new DomainException('Brew was unable to install [' . $formula . '].');
-            }
+        $this->cli->passthru(
+            trim($this->cli->getRunAsUserPrefix() . ' brew install ' . $formula . ' ' . implode(' ', $options))
         );
     }
 

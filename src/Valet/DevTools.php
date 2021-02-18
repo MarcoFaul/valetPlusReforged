@@ -107,7 +107,7 @@ class DevTools
     {
         info('Opening PHPstorm');
 
-        $this->cli->runAsUser('open -a PhpStorm ./');
+        $this->cli->passthru('open -a PhpStorm ./');
     }
 
     /**
@@ -116,7 +116,7 @@ class DevTools
     public function sourcetree(): void
     {
         info('Opening SourceTree');
-        $this->cli->runAsUser('open -a SourceTree ./');
+        $this->cli->passthru('open -a SourceTree ./');
     }
 
     /**

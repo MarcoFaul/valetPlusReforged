@@ -102,7 +102,7 @@ class Elasticsearch
     /**
      * Returns wether Elasticsearch is installed.
      *
-     * @param string $version
+     * @param string|null $version
      *
      * @return bool
      */
@@ -121,15 +121,15 @@ class Elasticsearch
     /**
      * Restart the service.
      *
-     * @param string $version
+     * @param string|null $version
      *
      * @return void
      */
     public function restart(?string $version = null): void
     {
         $version = $version ?: $this->getCurrentVersion();
-        if (!$this->installed($version) || (string)$version === '') {
-            return;
+        if ((string)$version === '' || !$this->installed($version)) {
+            throw new \Exception('Elasticsearch is not running');
         }
 
         if ($version = null) {

@@ -20,7 +20,7 @@ class Logs
      */
     public function open(string $file): void
     {
-        $this->cli->quietly('open ' . $this->resolvePath($file));
+        $this->cli->passthru('open ' . $this->resolvePath($file));
     }
 
     /**

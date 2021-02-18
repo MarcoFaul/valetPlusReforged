@@ -91,10 +91,10 @@ class Valet
      * @return bool|int
      * @throws ConnectionErrorException
      */
-    public function onLatestVersion($currentVersion)
+    public function onLatestVersion(string $currentVersion)
     {
         $response = Request::get(self::GITHUB_LATEST_RELEASE_URL)->send();
 
-        return version_compare($currentVersion->getVersion(), $response->body->tag_name, '>=');
+        return version_compare($currentVersion, $response->body->tag_name, '>=');
     }
 }

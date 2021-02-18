@@ -19,11 +19,9 @@ use function mysqli_real_escape_string;
 use function preg_replace;
 use function sprintf;
 use function str_replace;
-use function stristr;
 use function strpos;
 use function sys_get_temp_dir;
 use function tempnam;
-use function time;
 use function trim;
 
 //@TODO: refactor
@@ -169,9 +167,9 @@ class Mysql
      *
      * @throws DomainException
      */
-    public function verifyType($type)
+    public function verifyType($type): void
     {
-        if (!in_array($type, $this->supportedVersions())) {
+        if (!in_array($type, $this->supportedVersions(), true)) {
             throw new DomainException('Invalid Mysql type given. Available: ' . implode('/', self::SUPPORTED_MYSQL_FORMULAE));
         }
     }
@@ -181,7 +179,7 @@ class Mysql
      *
      * @return array
      */
-    public function supportedVersions()
+    public function supportedVersions(): array
     {
         return self::SUPPORTED_MYSQL_FORMULAE;
     }
@@ -205,7 +203,7 @@ class Mysql
      *
      * @param string $type
      */
-    private function removeConfiguration($type = self::MYSQL_DEFAULT_FORMULA)
+    private function removeConfiguration($type = self::MYSQL_DEFAULT_FORMULA): void
     {
         $this->files->unlink(static::MYSQL_CONF);
         $this->files->unlink(static::MYSQL_CONF . '.default');
@@ -214,7 +212,7 @@ class Mysql
     /**
      * Stop the Mysql service.
      */
-    public function stop()
+    public function stop(): void
     {
         $version = $this->installedVersion(self::MYSQL_DEFAULT_FORMULA);
         info('[' . $version . '] Stopping');
@@ -228,7 +226,7 @@ class Mysql
      *
      * @param string $type
      */
-    public function installConfiguration($type = self::MYSQL_DEFAULT_FORMULA)
+    public function installConfiguration($type = self::MYSQL_DEFAULT_FORMULA): void
     {
         info('[' . $type . '] Configuring');
 
@@ -252,7 +250,7 @@ class Mysql
     /**
      * Restart the Mysql service.
      */
-    public function restart()
+    public function restart(): void
     {
         $version = $this->installedVersion() ?: self::MYSQL_DEFAULT_FORMULA;
         info('[' . $version . '] Restarting');
@@ -289,7 +287,7 @@ class Mysql
      * @param string $oldPwd
      * @param string $newPwd
      */
-    public function setRootPassword($oldPwd = '', $newPwd = self::MYSQL_ROOT_PASSWORD)
+    public function setRootPassword($oldPwd = '', $newPwd = self::MYSQL_ROOT_PASSWORD): void
     {
         $alreadyRootPW = $this->cli->runAsUser('mysql -u root -proot -e"quit"');
 
@@ -318,7 +316,7 @@ class Mysql
     /**
      * Returns the stored password from the config. If not configured returns the default root password.
      */
-    private function getRootPassword()
+    private function getRootPassword(): string
     {
         $config = $this->configuration->read();
         if (isset($config['mysql']) && isset($config['mysql']['password'])) {
@@ -331,7 +329,7 @@ class Mysql
     /**
      * Prepare Mysql for uninstallation.
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->stop();
     }
@@ -339,7 +337,7 @@ class Mysql
     /**
      * Print table of exists databases.
      */
-    public function listDatabases()
+    public function listDatabases(): void
     {
         table(['Database'], $this->getDatabases());
     }
@@ -358,7 +356,7 @@ class Mysql
         }
 
         return collect($result->fetch_all(MYSQLI_ASSOC))->reject(function ($row) {
-            return in_array($row['Database'], $this->getSystemDatabase());
+            return in_array($row['Database'], $this->getSystemDatabase(), true);
         })->map(function ($row) {
             return [$row['Database']];
         })->toArray();
@@ -380,7 +378,7 @@ class Mysql
 
         return tap($link->query($query), function ($result) use ($link) {
             if (!$result) { // throw mysql error
-                warning(mysqli_error($link));
+                error(mysqli_error($link));
             }
         });
     }
@@ -417,7 +415,7 @@ class Mysql
      *
      * @return string
      */
-    protected function escape($string)
+    protected function escape(string $string): string
     {
         return mysqli_real_escape_string($this->getConnection(), $string);
     }
@@ -427,7 +425,7 @@ class Mysql
      *
      * @return array
      */
-    protected function getSystemDatabase()
+    protected function getSystemDatabase(): array
     {
         return $this->systemDatabase;
     }
@@ -438,7 +436,7 @@ class Mysql
      * @param $file
      * @param $database
      */
-    public function reimportDatabase($file, $database)
+    public function reimportDatabase($file, $database): void
     {
         $this->importDatabase($file, $database, true);
     }
@@ -450,7 +448,7 @@ class Mysql
      * @param string $database
      * @param bool $dropDatabase
      */
-    public function importDatabase($file, $database, $dropDatabase = false)
+    public function importDatabase($file, $database, $dropDatabase = false): void
     {
         $database = $this->getDatabaseName($database);
 
@@ -462,7 +460,7 @@ class Mysql
         $this->createDatabase($database);
 
         $gzip = ' | ';
-        if (stristr($file, '.gz')) {
+        if (stripos($file, '.gz') !== false) {
             $gzip = ' | gzip -cd | ';
         }
         $this->cli->passthru('pv ' . escapeshellarg($file) . $gzip . 'mysql ' . escapeshellarg($database));
@@ -475,7 +473,7 @@ class Mysql
      *
      * @return string
      */
-    protected function getDatabaseName($database = '')
+    protected function getDatabaseName($database = ''): string
     {
         return $database ?: $this->getDirName();
     }
@@ -485,7 +483,7 @@ class Mysql
      *
      * @return string
      */
-    public function getDirName()
+    public function getDirName(): string
     {
         $gitDir = $this->cli->runAsUser('git rev-parse --show-toplevel 2>/dev/null');
 
@@ -503,7 +501,7 @@ class Mysql
      *
      * @return bool|string
      */
-    public function dropDatabase($name)
+    public function dropDatabase(string $name)
     {
         $name = $this->getDatabaseName($name);
 
@@ -517,7 +515,7 @@ class Mysql
      *
      * @return bool|string
      */
-    public function createDatabase($name)
+    public function createDatabase(string $name)
     {
         $name = $this->getDatabaseName($name);
 
@@ -531,7 +529,7 @@ class Mysql
      *
      * @return bool|mysqli_result
      */
-    public function isDatabaseExists($name)
+    public function isDatabaseExists(string $name)
     {
         $name = $this->getDatabaseName($name);
 
@@ -548,19 +546,19 @@ class Mysql
      *
      * @return array
      */
-    public function exportDatabase($filename, $database)
+    public function exportDatabase($filename, $database): array
     {
         $database = $this->getDatabaseName($database);
 
         if (!$filename || $filename === '-') {
-            $filename = $database . '-' . date('Y-m-d-His', time());
+            $filename = $database . '-' . date('Y-m-d-His');
         }
 
-        if (!stristr($filename, '.sql')) {
-            $filename = $filename . '.sql.gz';
+        if (stripos($filename, '.sql') === false) {
+            $filename .= '.sql.gz';
         }
-        if (!stristr($filename, '.gz')) {
-            $filename = $filename . '.gz';
+        if (\stripos($filename, '.gz') === false) {
+            $filename .= '.gz';
         }
 
         $this->cli->passthru('mysqldump ' . escapeshellarg($database) . ' | gzip > ' . escapeshellarg($filename ?: $database));
@@ -576,7 +574,7 @@ class Mysql
      *
      * @param string $name
      */
-    public function openSequelPro($name = '')
+    public function openSequelPro($name = ''): void
     {
         $tmpName = tempnam(sys_get_temp_dir(), 'sequelpro') . '.spf';
 
@@ -591,6 +589,6 @@ class Mysql
             )
         );
 
-        $this->cli->quietly('open ' . $tmpName);
+        $this->cli->passthru('open ' . $tmpName);
     }
 }

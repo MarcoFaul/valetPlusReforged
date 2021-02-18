@@ -18,6 +18,11 @@ class CommandLine
         $this->runCommand($command . ' > /dev/null 2>&1');
     }
 
+    public function getRunAsUserPrefix(): string
+    {
+        return 'sudo -u ' . user();
+    }
+
     /**
      * Simple global function to run commands.
      *
@@ -72,16 +77,15 @@ class CommandLine
      * Run the given command.
      *
      * @param string $command
-     * @param callable $onError
+     * @param callable|null $onError
      *
      * @return string
      */
     public function runCommand(string $command, callable $onError = null): string
     {
-        $onError = $onError ?: function () {
-        };
+        $onError = $onError ?: static function () {};
 
-        $process = new Process($command);
+        $process = new Process([$command]);
 
         $processOutput = '';
         $process->setTimeout(null)->run(function ($type, $line) use (&$processOutput) {

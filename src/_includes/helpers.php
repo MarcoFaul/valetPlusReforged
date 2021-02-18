@@ -19,7 +19,19 @@ define('VALET_STATIC_PREFIX', '41c270e4-5535-4daa-b23e-c269744c2f45');
  *
  * @return void
  */
-function info($output)
+function success(string $output)
+{
+    output('<fg=green>' . $output . '</>');
+}
+
+/**
+ * Output the given text to the console.
+ *
+ * @param string $output
+ *
+ * @return void
+ */
+function info(string $output)
 {
     output('<info>' . $output . '</info>');
 }
@@ -31,7 +43,19 @@ function info($output)
  *
  * @return void
  */
-function warning($output)
+function warning(string $output)
+{
+    output('<fg=yellow>' . $output . '</>');
+}
+
+/**
+ * Output the given text to the console.
+ *
+ * @param string $output
+ *
+ * @return void
+ */
+function error(string $output)
 {
     output('<fg=red>' . $output . '</>');
 }
