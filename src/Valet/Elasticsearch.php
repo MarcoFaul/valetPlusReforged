@@ -128,12 +128,13 @@ class Elasticsearch
     public function restart(?string $version = null): void
     {
         $version = $version ?: $this->getCurrentVersion();
-        if ((string)$version === '' || !$this->installed($version)) {
-            throw new \Exception('Elasticsearch is not running');
+
+        if ((string)$version === '' || $version = null) {
+            return;
         }
 
-        if ($version = null) {
-            return;
+        if (!$this->installed($version)) {
+            throw new \Exception('Elasticsearch is not running');
         }
 
         if (array_key_exists($version, self::SUPPORTED_ES_FORMULAE) === false) {
@@ -183,11 +184,12 @@ class Elasticsearch
     public function stop(?string $version = null): void
     {
         $version = ($version ?: $this->getCurrentVersion());
-        if (!$this->installed($version)) {
+
+        if ((string)$version === '' || $version = null) {
             return;
         }
 
-        if ($version = null) {
+        if (!$this->installed($version)) {
             return;
         }
 

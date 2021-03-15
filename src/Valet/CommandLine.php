@@ -85,14 +85,17 @@ class CommandLine
     {
         $onError = $onError ?: static function () {};
 
-        $process = new Process([$command]);
+        $process = Process::fromShellCommandline($command);
 
         $processOutput = '';
         $process->setTimeout(null)->run(function ($type, $line) use (&$processOutput) {
             $processOutput .= $line;
         });
 
-        if ($process->getExitCode() > 0) {
+        $process->run();
+
+
+        if (!$process->isSuccessful()) {
             $onError($process->getExitCode(), $processOutput);
         }
 
